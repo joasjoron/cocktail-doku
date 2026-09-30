@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cocktail-doku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFF;
+  --ink:#2A1F14;
+  --muted:#6F604C;
+  --gold:#D9A21B;
+  --gold-deep:#9A6F08;
+  --kraft:#F1E6CF;
+  --kraft-edge:#E2D1AE;
+  --line:#E6DCC7;
+  --lime:#4E8A22;
+  --lime-soft:#E7F2DC;
+  --grenadine:#C2263B;
+  --grenadine-soft:#FBE3E6;
+  --shade:rgba(42,31,20,.45);
+  --display:"Bebas Neue","Oswald","Arial Narrow",Impact,sans-serif;
+  --body:"Montserrat","Segoe UI",system-ui,-apple-system,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#1B150F;
+    --ink:#F3E9D8;
+    --muted:#BBA98F;
+    --gold:#E3AE2A;
+    --gold-deep:#F0C45A;
+    --kraft:#2E251A;
+    --kraft-edge:#44372A;
+    --line:#3B2F22;
+    --lime:#8BC45A;
+    --lime-soft:#253220;
+    --grenadine:#F0606F;
+    --grenadine-soft:#3A1F22;
+    --shade:rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1B150F;
+  --ink:#F3E9D8;
+  --muted:#BBA98F;
+  --gold:#E3AE2A;
+  --gold-deep:#F0C45A;
+  --kraft:#2E251A;
+  --kraft-edge:#44372A;
+  --line:#3B2F22;
+  --lime:#8BC45A;
+  --lime-soft:#253220;
+  --grenadine:#F0606F;
+  --grenadine-soft:#3A1F22;
+  --shade:rgba(0,0,0,.6);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.band{background:var(--gold);color:#2A1F14}
+.band-inner{max-width:620px;margin:0 auto;padding:18px 20px 14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.band h1{font-family:var(--display);font-weight:400;font-size:clamp(44px,11vw,64px);line-height:.85;margin:0;letter-spacing:.01em}
+.band p{margin:6px 0 0;font-size:13px;font-weight:500;max-width:34ch}
+.modes{display:flex;gap:6px}
+.modes button{border:2px solid #2A1F14;background:transparent;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;color:#2A1F14}
+.modes button[aria-pressed="true"]{background:#2A1F14;color:#F7E7BD}
+
+main{max-width:620px;margin:0 auto;padding:18px 16px 40px}
+.status{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.status .label{font-size:13px;color:var(--muted);font-weight:500}
+.lives{display:flex;gap:6px;align-items:center}
+.cherry{width:16px;height:16px;border-radius:50%;background:var(--grenadine);border:2px solid var(--grenadine);transition:background .25s}
+.cherry.lost{background:transparent}
+
+.grid{display:grid;grid-template-columns:minmax(74px,.9fr) repeat(3,1fr);gap:8px;align-items:center}
+.head{font-size:12.5px;line-height:1.25;font-weight:600;padding:2px}
+.head small{display:block;font-weight:500;color:var(--gold-deep);font-size:11px;margin-bottom:2px}
+.head.col{text-align:center;align-self:end;padding-bottom:4px}
+.head.row{text-align:right;padding-right:4px}
+.corner{font-family:var(--display);font-size:22px;color:var(--muted);text-align:center;line-height:1}
+
+.coaster{aspect-ratio:1;width:100%;max-width:132px;justify-self:center;border-radius:50%;border:none;cursor:pointer;
+  background:radial-gradient(circle at 50% 50%,var(--kraft) 0 60%,var(--kraft-edge) 61% 63%,var(--kraft) 64% 100%);
+  box-shadow:inset 0 0 0 2px var(--kraft-edge);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10%;text-align:center;position:relative;transition:transform .15s}
+.coaster:hover:not(:disabled){transform:rotate(-4deg)}
+.coaster .q{font-family:var(--display);font-size:clamp(26px,7vw,38px);line-height:1;color:var(--gold-deep)}
+.coaster .n{font-size:10.5px;color:var(--muted);font-weight:500;line-height:1.2;margin-top:2px}
+.coaster .name{font-family:var(--display);font-size:clamp(15px,4.4vw,22px);line-height:.95;letter-spacing:.01em}
+.coaster.ok{background:radial-gradient(circle at 50% 50%,var(--lime-soft) 0 60%,var(--lime) 61% 63%,var(--lime-soft) 64% 100%);box-shadow:inset 0 0 0 2px var(--lime);cursor:default}
+.coaster.ok .name{color:var(--ink)}
+.coaster.reveal{cursor:default;background:radial-gradient(circle at 50% 50%,var(--grenadine-soft) 0 60%,var(--grenadine) 61% 63%,var(--grenadine-soft) 64% 100%);box-shadow:inset 0 0 0 2px var(--grenadine)}
+.coaster.reveal .name{color:var(--muted);font-size:clamp(13px,3.8vw,19px)}
+.coaster.miss{animation:miss .4s}
+@keyframes miss{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+.toast{min-height:44px;margin:16px 0 0;font-size:14px;font-weight:500;text-align:center}
+.toast.bad{color:var(--grenadine)}
+.toast.good{color:var(--lime)}
+
+.end{margin-top:14px;border-top:3px solid var(--gold);padding-top:16px}
+.end h2{font-family:var(--display);font-weight:400;font-size:38px;line-height:1;margin:0 0 6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.stat{text-align:center}
+.stat b{display:block;font-family:var(--display);font-size:32px;font-weight:400;line-height:1}
+.stat span{font-size:11.5px;color:var(--muted)}
+.btn{display:inline-block;background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px;cursor:pointer}
+.answers{margin-top:16px}
+.answers h3{font-size:14px;margin:0 0 8px}
+.answers ul{margin:0;padding:0;list-style:none}
+.answers li{padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.answers li b{display:block;font-size:12.5px;color:var(--gold-deep)}
+
+details.rules{margin-top:26px;border-top:1px solid var(--line);padding-top:12px}
+details.rules summary{cursor:pointer;font-weight:600}
+details.rules ul{padding-left:18px;margin:10px 0 0}
+details.rules li{margin-bottom:6px;font-size:14px;max-width:66ch}
+
+.sheet-back{position:fixed;inset:0;background:var(--shade);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.sheet-back.open{display:flex}
+.sheet{background:var(--paper);width:100%;max-width:520px;max-height:82vh;border-radius:18px 18px 0 0;display:flex;flex-direction:column;
+  padding:16px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+@media (min-width:640px){.sheet-back{align-items:center}.sheet{border-radius:18px;max-height:78vh}}
+.sheet header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sheet h2{font-family:var(--display);font-weight:400;font-size:26px;line-height:1;margin:0}
+.sheet .crit{font-size:13px;color:var(--muted);margin:4px 0 10px}
+.close{background:none;border:none;font-size:26px;line-height:1;cursor:pointer;padding:0 4px;color:var(--muted)}
+.search{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.search:focus{border-color:var(--gold);outline:none}
+.list{overflow:auto;margin-top:10px;-webkit-overflow-scrolling:touch}
+.list button{display:block;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);padding:11px 4px;cursor:pointer;font-size:15px}
+.list button:hover:not(:disabled){background:var(--kraft)}
+.list button:disabled{color:var(--muted);text-decoration:line-through;cursor:not-allowed}
+.list .empty{padding:14px 4px;color:var(--muted);font-size:14px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="band">
+  <div class="band-inner">
+    <div>
+      <h1>Cocktail-doku</h1>
+      <p id="subtitle">Remplissez les 9 sous-verres avec des cocktails du socle.</p>
+    </div>
+    <div class="modes" role="group" aria-label="Choix de la grille">
+      <button id="btnDaily" aria-pressed="true">Grille du jour</button>
+      <button id="btnRandom" aria-pressed="false">Nouvelle grille</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="status">
+    <span class="label" id="gridName"></span>
+    <div class="lives" aria-label="Erreurs restantes" id="lives"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <p class="toast" id="toast" role="status" aria-live="polite"></p>
+  <section class="end" id="end" hidden></section>
+
+  <details class="rules">
+    <summary>Règles et cas particuliers</summary>
+    <ul>
+      <li>Chaque sous-verre doit contenir un cocktail qui respecte à la fois le critère de sa ligne et celui de sa colonne.</li>
+      <li>Un cocktail ne peut être utilisé qu'une seule fois par grille.</li>
+      <li>Une bonne réponse est définitive. Trois erreurs, et la partie s'arrête.</li>
+      <li>Le chiffre sous le « ? » indique combien de cocktails du socle conviennent.</li>
+      <li>Le Sour et le Fizz se font avec une eau-de-vie au choix : ils ne comptent pour aucun alcool précis.</li>
+      <li>La cachaça (Caipirinha) n'est pas du rhum.</li>
+      <li>Le Mint Julep compte pour le whisky et le cognac. L'Old-Fashioned compte pour le whisky.</li>
+      <li>« Menthe » compte la menthe dans la recette ou en garniture. « Zeste » inclut le Dry Martini (olive ou zeste).</li>
+      <li>« Bitter » désigne l'amer type Campari (Negroni, Americano, Spritz), à ne pas confondre avec l'aromatic bitters.</li>
+      <li>« Versé sans mélanger » : un ingrédient ajouté en dernier par-dessus (float).</li>
+    </ul>
+  </details>
+</main>
+
+<div class="sheet-back" id="sheetBack">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <header>
+      <div>
+        <h2 id="sheetTitle">Choisir un cocktail</h2>
+        <p class="crit" id="sheetCrit"></p>
+      </div>
+      <button class="close" id="sheetClose" aria-label="Fermer">×</button>
+    </header>
+    <input class="search" id="search" type="search" placeholder="Rechercher un cocktail" autocomplete="off" aria-label="Rechercher un cocktail">
+    <div class="list" id="list"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- Les 36 cocktails du socle ---------- */
+const C = [
+ {n:"Aviation",alc:["gin"],m:"shaker",v:"Nick & Nora",cat:"short",t:"all",ing:["citron"],gar:["cerise"],tav:28,yr:1916},
+ {n:"Bamboo",alc:["vermouth"],m:"melange",v:"Nick & Nora",cat:"short",t:"before",ing:[],gar:["zeste"],tav:15,yr:1878},
+ {n:"Bramble",alc:["gin"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:[],pilee:1,float:1,tav:25,yr:1980},
+ {n:"Caipirinha",alc:["cachaca"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["citronvert","sucre"],gar:["aucune"],pilee:1,pilon:1,tav:40,yr:1948},
+ {n:"Cosmopolitan",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","triplesec"],gar:["zeste"],tav:27,yr:1988},
+ {n:"Daiquiri",alc:["rhum"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","sucre"],gar:["aucune"],tav:27,yr:1900},
+ {n:"Dry Martini",alc:["gin","vermouth"],m:"melange",v:"Martini",cat:"short",t:"before",ing:[],gar:["zeste"],tav:35,yr:1904},
+ {n:"Espresso Martini",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"after",ing:["sucre"],gar:[],tav:27,yr:1983},
+ {n:"Gin Basil Smash",alc:["gin"],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:[],tav:25,yr:2008},
+ {n:"Manhattan",alc:["whisky","vermouth"],m:"melange",v:"Nick & Nora",cat:"short",t:"before",ing:["bitters"],gar:["cerise"],tav:35,yr:1880},
+ {n:"Margarita",alc:["tequila"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","triplesec"],gar:[],tav:34,yr:1953},
+ {n:"Mint Julep",alc:["whisky","cognac"],m:"direct",v:"Julep",cat:"short",t:"all",ing:["sucre","menthe"],gar:["menthe"],pilee:1,pilon:1,tav:40,yr:1807},
+ {n:"Negroni",alc:["gin","vermouth","bitter"],m:"direct",v:"Rocks",cat:"short",t:"before",ing:[],gar:[],tav:26,yr:null},
+ {n:"Old-Fashioned",alc:["whisky"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["bitters","sucre"],gar:["zeste","cerise"],pilon:1,tav:40,yr:1806},
+ {n:"Penicillin",alc:["whisky"],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron"],gar:[],float:1,tav:25,yr:2005},
+ {n:"Pornstar Martini",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:[],gar:[],tav:18,yr:2002},
+ {n:"Sidecar",alc:["cognac"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citron","triplesec"],gar:["aucune"],tav:36,yr:1922},
+ {n:"Sour",alc:[],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:["cerise"],tav:28,yr:1862},
+ {n:"Americano",alc:["vermouth","bitter"],m:"direct",v:"Highball",cat:"long",t:"before",ing:["gazeuse"],gar:[],tav:13,yr:1860},
+ {n:"Bellini",alc:["bulles"],m:"direct",v:"Flûte",cat:"long",t:"all",ing:[],gar:["aucune"],tav:8,yr:1948},
+ {n:"Bloody Mary",alc:["vodka"],m:"direct",v:"Highball",cat:"long",t:"before",ing:["citron"],gar:[],tav:13,yr:1939},
+ {n:"Champagne Cocktail",alc:["cognac","bulles"],m:"direct",v:"Flûte",cat:"long",t:"all",ing:["bitters","sucre"],gar:["zeste"],tav:8,yr:1862},
+ {n:"Dark and Stormy",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert"],gar:[],float:1,tav:11,yr:null},
+ {n:"Fizz",alc:[],m:"shaker",v:"Highball",cat:"long",t:"all",ing:["citron","sucre","gazeuse"],gar:[],tav:13,yr:1876},
+ {n:"French 75",alc:["gin","bulles"],m:"shaker",v:"Flûte",cat:"long",t:"all",ing:["citron","sucre"],gar:["zeste"],tav:16,yr:1927},
+ {n:"Horse's Neck",alc:["cognac"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["bitters"],gar:["zeste"],tav:11,yr:1890},
+ {n:"Mai Tai",alc:["rhum"],m:"shaker",v:"Rocks",cat:"long",t:"all",ing:["citronvert","triplesec"],gar:["menthe"],pilee:1,tav:30,yr:1953},
+ {n:"Mojito",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","sucre","menthe","gazeuse"],gar:["menthe"],pilon:1,tav:13,yr:1929},
+ {n:"Moscow Mule",alc:["vodka"],m:"direct",v:"Mule",cat:"long",t:"all",ing:["citronvert"],gar:[],tav:13,yr:1941},
+ {n:"Paloma",alc:["tequila"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","gazeuse"],gar:[],tav:10,yr:1990},
+ {n:"Piña Colada",alc:["rhum"],m:"shaker",v:"Highball",cat:"long",t:"all",ing:[],gar:["cerise"],tav:13,yr:1954},
+ {n:"Planter's Punch",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["bitters","orange"],gar:["cerise"],float:1,tav:16,yr:1638},
+ {n:"Rum Swizzle",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","sucre","bitters"],gar:["zeste","menthe"],pilee:1,tav:20,yr:1788},
+ {n:"Sex on the Beach",alc:["vodka"],m:"shaker",v:"Highball",cat:"long",t:"all",ing:["orange"],gar:[],tav:15,yr:1980},
+ {n:"Spritz",alc:["bitter","bulles"],m:"direct",v:"Vin",cat:"long",t:"before",ing:["gazeuse"],gar:[],tav:16,yr:null},
+ {n:"Tequila Sunrise",alc:["tequila"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["orange"],gar:["cerise"],float:1,tav:13,yr:null}
+];
+
+/* ---------- Critères ---------- */
+const has=(arr,x)=>arr.includes(x);
+const CRIT = [
+ {id:"gin",g:"alc",grp:"Alcool",label:"Gin",f:c=>has(c.alc,"gin")},
+ {id:"vodka",g:"alc",grp:"Alcool",label:"Vodka",f:c=>has(c.alc,"vodka")},
+ {id:"rhum",g:"alc",grp:"Alcool",label:"Rhum",f:c=>has(c.alc,"rhum")},
+ {id:"tequila",g:"alc",grp:"Alcool",label:"Tequila",f:c=>has(c.alc,"tequila")},
+ {id:"whisky",g:"alc",grp:"Alcool",label:"Whisky",f:c=>has(c.alc,"whisky")},
+ {id:"cognac",g:"alc",grp:"Alcool",label:"Cognac",f:c=>has(c.alc,"cognac")},
+ {id:"vermouth",g:"alc",grp:"Alcool",label:"Vermouth",f:c=>has(c.alc,"vermouth")},
+ {id:"bulles",g:"alc",grp:"Alcool",label:"Champagne ou vin effervescent",f:c=>has(c.alc,"bulles")},
+ {id:"bitter",g:"alc",grp:"Alcool",label:"Bitter (type Campari)",f:c=>has(c.alc,"bitter")},
+ {id:"shaker",g:"meth",grp:"Méthode",label:"Shaker",f:c=>c.m==="shaker"},
+ {id:"melange",g:"meth",grp:"Méthode",label:"Verre à mélange",f:c=>c.m==="melange"},
+ {id:"direct",g:"meth",grp:"Méthode",label:"Direct au verre",f:c=>c.m==="direct"},
+ {id:"coupe",g:"verre",grp:"Verre",label:"Coupe",f:c=>c.v==="Coupe"},
+ {id:"rocks",g:"verre",grp:"Verre",label:"Rocks",f:c=>c.v==="Rocks"},
+ {id:"highball",g:"verre",grp:"Verre",label:"Highball",f:c=>c.v==="Highball"},
+ {id:"nicknora",g:"verre",grp:"Verre",label:"Nick & Nora",f:c=>c.v==="Nick & Nora"},
+ {id:"flute",g:"verre",grp:"Verre",label:"Flûte",f:c=>c.v==="Flûte"},
+ {id:"short",g:"cat",grp:"Catégorie",label:"Short drink",f:c=>c.cat==="short"},
+ {id:"long",g:"cat",grp:"Catégorie",label:"Long drink",f:c=>c.cat==="long"},
+ {id:"before",g:"type",grp:"Type",label:"Before dinner",f:c=>c.t==="before"},
+ {id:"citronvert",g:"ing",grp:"Ingrédient",label:"Citron vert",f:c=>has(c.ing,"citronvert")},
+ {id:"citron",g:"ing",grp:"Ingrédient",label:"Jus de citron jaune",f:c=>has(c.ing,"citron")},
+ {id:"abitters",g:"ing",grp:"Ingrédient",label:"Aromatic bitters",f:c=>has(c.ing,"bitters")},
+ {id:"gazeuse",g:"ing",grp:"Ingrédient",label:"Eau gazeuse",f:c=>has(c.ing,"gazeuse")},
+ {id:"sucre",g:"ing",grp:"Ingrédient",label:"Sucre ou sirop de sucre",f:c=>has(c.ing,"sucre")},
+ {id:"triplesec",g:"ing",grp:"Ingrédient",label:"Triple sec ou curaçao",f:c=>has(c.ing,"triplesec")},
+ {id:"orange",g:"ing",grp:"Ingrédient",label:"Jus d'orange",f:c=>has(c.ing,"orange")},
+ {id:"menthe",g:"ing",grp:"Ingrédient",label:"Menthe",f:c=>has(c.ing,"menthe")||has(c.gar,"menthe")},
+ {id:"cerise",g:"gar",grp:"Garniture",label:"Cerise à l'eau-de-vie",f:c=>has(c.gar,"cerise")},
+ {id:"zeste",g:"gar",grp:"Garniture",label:"Zeste d'agrume",f:c=>has(c.gar,"zeste")},
+ {id:"aucune",g:"gar",grp:"Garniture",label:"Sans garniture",f:c=>has(c.gar,"aucune")},
+ {id:"pilee",g:"tech",grp:"Technique",label:"Glace pilée",f:c=>!!c.pilee},
+ {id:"float",g:"tech",grp:"Technique",label:"Ingrédient versé sans mélanger",f:c=>!!c.float},
+ {id:"pilon",g:"tech",grp:"Technique",label:"Se prépare au pilon",f:c=>!!c.pilon},
+ {id:"fort",g:"tav",grp:"TAV",label:"TAV de 30 % ou plus",f:c=>c.tav>=30},
+ {id:"leger",g:"tav",grp:"TAV",label:"TAV de 13 % ou moins",f:c=>c.tav<=13},
+ {id:"ancien",g:"hist",grp:"Histoire",label:"Créé avant 1900",f:c=>c.yr!==null&&c.yr<1900},
+ {id:"recent",g:"hist",grp:"Histoire",label:"Créé à partir des années 1980",f:c=>c.yr!==null&&c.yr>=1980}
+];
+const byName = Object.fromEntries(C.map(c=>[c.n,c]));
+
+/* ---------- Aléatoire reproductible ---------- */
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return ()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return (h^=h>>>16)>>>0}}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(arr,rng){for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+
+function cellMatches(r,c){return C.filter(x=>r.f(x)&&c.f(x)).map(x=>x.n)}
+function hasMatching(lists){
+  const order=[...lists.keys()].sort((a,b)=>lists[a].length-lists[b].length);
+  const used=new Set();
+  function go(k){if(k===order.length)return true;for(const n of lists[order[k]]){if(!used.has(n)){used.add(n);if(go(k+1))return true;used.delete(n)}}return false}
+  return go(0);
+}
+const IMPLIED=[["highball","long"],["flute","long"],["coupe","short"],["nicknora","short"],["leger","long"],["fort","short"],["pilon","direct"],["melange","short"]];
+function implied(ids){return IMPLIED.some(([a,b])=>ids.includes(a)&&ids.includes(b))}
+function pickDistinct(pool,n,banned){const out=[],gs=new Set(banned);for(const c of pool){if(out.length===n)break;if(!gs.has(c.g)){out.push(c);gs.add(c.g)}}return out}
+function generate(rng){
+  let fallback=null;
+  for(let t=0;t<40000;t++){
+    const pool=shuffle(CRIT.slice(),rng);
+    let rows;
+    if(rng()<0.4){rows=pool.filter(c=>c.g==="alc").slice(0,3)}
+    else rows=pickDistinct(pool,3,[]);
+    if(rows.length<3)continue;
+    let cols=pickDistinct(pool.filter(c=>!rows.includes(c)),3,rows.map(r=>r.g));
+    if(cols.length<3)continue;
+    if(rng()<0.5){[rows,cols]=[cols,rows]}
+    const ids=[...rows,...cols].map(c=>c.id);
+    if(implied(ids))continue;
+    const lists=[];let ok=true;
+    for(const r of rows)for(const c of cols){const l=cellMatches(r,c);if(!l.length){ok=false;break}lists.push(l)}
+    if(!ok||lists.length<9)continue;
+    if(!hasMatching(lists))continue;
+    const res={rows:rows.map(r=>r.id),cols:cols.map(c=>c.id)};
+    const tight=lists.filter(l=>l.length<=3).length;
+    const max=Math.max(...lists.map(l=>l.length));
+    if(tight>=2&&max<=8)return res;
+    if(!fallback)fallback=res;
+  }
+  return fallback;
+}
+
+/* ---------- Stockage (facultatif) ---------- */
+const store={
+  get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ---------- État ---------- */
+const critById=Object.fromEntries(CRIT.map(c=>[c.id,c]));
+const today=new Date();
+const dayKey=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
+const gridNumber=Math.floor((new Date(dayKey)-new Date("2026-01-01"))/86400000)+1;
+let S=null;
+
+function newGame(mode){
+  const seed = mode==="daily" ? hashStr("cocktaildoku-"+dayKey)() : Math.floor(Math.random()*4294967296);
+  const g=generate(mulberry32(seed));
+  S={mode,rows:g.rows,cols:g.cols,cells:Array(9).fill(null),errors:0,done:false,won:false};
+  if(mode==="daily"){
+    const saved=store.get("cocktaildoku:daily:"+dayKey);
+    if(saved&&saved.rows&&saved.rows.join()===g.rows.join()&&saved.cols.join()===g.cols.join())Object.assign(S,saved);
+  }
+  document.getElementById("btnDaily").setAttribute("aria-pressed",mode==="daily");
+  document.getElementById("btnRandom").setAttribute("aria-pressed",mode==="random");
+  document.getElementById("gridName").textContent = mode==="daily" ? "Grille du jour n° "+gridNumber : "Grille d'entraînement";
+  setToast("");
+  render();
+}
+function save(){if(S.mode==="daily")store.set("cocktaildoku:daily:"+dayKey,S)}
+const R=i=>critById[S.rows[Math.floor(i/3)]];
+const K=i=>critById[S.cols[i%3]];
+const matchesFor=i=>cellMatches(R(i),K(i));
+
+/* ---------- Rendu ---------- */
+function render(){
+  const lives=document.getElementById("lives");
+  lives.innerHTML="";
+  for(let k=0;k<3;k++){const d=document.createElement("span");d.className="cherry"+(k<S.errors?" lost":"");lives.appendChild(d)}
+  lives.setAttribute("aria-label",(3-S.errors)+" erreur(s) restante(s)");
+
+  const grid=document.getElementById("grid");
+  grid.innerHTML="";
+  const corner=document.createElement("div");corner.className="corner";corner.textContent="×";corner.setAttribute("aria-hidden","true");grid.appendChild(corner);
+  S.cols.forEach(id=>{const c=critById[id];const h=document.createElement("div");h.className="head col";h.innerHTML="<small>"+c.grp+"</small>"+c.label;grid.appendChild(h)});
+
+  const reveal = S.done && !S.won ? solveRemaining() : {};
+  for(let r=0;r<3;r++){
+    const rc=critById[S.rows[r]];
+    const h=document.createElement("div");h.className="head row";h.innerHTML="<small>"+rc.grp+"</small>"+rc.label;grid.appendChild(h);
+    for(let c=0;c<3;c++){
+      const i=r*3+c;
+      const b=document.createElement("button");
+      b.className="coaster";b.dataset.i=i;
+      const n=matchesFor(i).length;
+      if(S.cells[i]){
+        b.classList.add("ok");b.disabled=true;
+        b.innerHTML='<span class="name">'+S.cells[i]+'</span>';
+        b.setAttribute("aria-label",R(i).label+" et "+K(i).label+" : "+S.cells[i]);
+      }else if(S.done){
+        b.classList.add("reveal");b.disabled=true;
+        b.innerHTML='<span class="name">'+(reveal[i]||"")+'</span>';
+        b.setAttribute("aria-label",R(i).label+" et "+K(i).label+" : réponse possible "+(reveal[i]||""));
+      }else{
+        b.innerHTML='<span class="q">?</span><span class="n">'+n+(n>1?" possibilités":" possibilité")+'</span>';
+        b.setAttribute("aria-label",R(i).label+" et "+K(i).label+", "+n+" possibilités");
+        b.addEventListener("click",()=>openSheet(i));
+      }
+      grid.appendChild(b);
+    }
+  }
+  renderEnd();
+}
+function solveRemaining(){
+  const used=new Set(S.cells.filter(Boolean));
+  const idx=[...Array(9).keys()].filter(i=>!S.cells[i]);
+  const out={};
+  function go(k){if(k===idx.length)return true;const i=idx[k];for(const n of matchesFor(i)){if(!used.has(n)){used.add(n);out[i]=n;if(go(k+1))return true;used.delete(n);delete out[i]}}return false}
+  if(!go(0)){idx.forEach(i=>{out[i]=matchesFor(i)[0]})}
+  return out;
+}
+function renderEnd(){
+  const end=document.getElementById("end");
+  if(!S.done){end.hidden=true;end.innerHTML="";return}
+  end.hidden=false;
+  const found=S.cells.filter(Boolean).length;
+  let html = S.won
+    ? "<h2>Grille complète !</h2><p>Les 9 sous-verres sont remplis"+(S.errors?" avec "+S.errors+" erreur"+(S.errors>1?"s":""):" sans aucune erreur")+".</p>"
+    : "<h2>Trois erreurs</h2><p>Vous avez trouvé "+found+" cocktail"+(found>1?"s":"")+" sur 9. Les sous-verres rouges montrent une réponse possible.</p>";
+  if(S.mode==="daily"){
+    const st=store.get("cocktaildoku:stats")||{played:0,won:0,streak:0,best:0};
+    html+='<div class="stats"><div class="stat"><b>'+st.played+'</b><span>Parties</span></div><div class="stat"><b>'+(st.played?Math.round(st.won/st.played*100):0)+'%</b><span>Réussite</span></div><div class="stat"><b>'+st.streak+'</b><span>Série</span></div><div class="stat"><b>'+st.best+'</b><span>Record</span></div></div>';
+    html+='<button class="btn" id="again">Jouer une grille d\'entraînement</button>';
+  }else{
+    html+='<p><button class="btn" id="again">Nouvelle grille</button></p>';
+  }
+  html+='<div class="answers"><h3>Toutes les réponses possibles</h3><ul>';
+  for(let i=0;i<9;i++){html+="<li><b>"+R(i).label+" × "+K(i).label+"</b>"+matchesFor(i).join(", ")+"</li>"}
+  html+="</ul></div>";
+  end.innerHTML=html;
+  document.getElementById("again").addEventListener("click",()=>newGame("random"));
+}
+function recordStats(){
+  if(S.mode!=="daily")return;
+  const st=store.get("cocktaildoku:stats")||{played:0,won:0,streak:0,best:0,last:null};
+  if(st.last===dayKey)return;
+  const y=new Date(today);y.setDate(y.getDate()-1);
+  const yKey=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
+  st.played++;
+  if(S.won){st.won++;st.streak=(st.lastWin===yKey?st.streak:0)+1;st.lastWin=dayKey;st.best=Math.max(st.best,st.streak)}
+  else st.streak=0;
+  st.last=dayKey;
+  store.set("cocktaildoku:stats",st);
+}
+
+/* ---------- Sélecteur ---------- */
+let current=null;
+const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+function openSheet(i){
+  current=i;
+  document.getElementById("sheetCrit").textContent=R(i).label+" + "+K(i).label;
+  const s=document.getElementById("search");s.value="";
+  fillList("");
+  document.getElementById("sheetBack").classList.add("open");
+  setTimeout(()=>s.focus(),30);
+}
+function closeSheet(){document.getElementById("sheetBack").classList.remove("open");const b=document.querySelector('.coaster[data-i="'+current+'"]');if(b&&!b.disabled)b.focus()}
+function fillList(q){
+  const used=new Set(S.cells.filter(Boolean));
+  const list=document.getElementById("list");list.innerHTML="";
+  const items=C.map(c=>c.n).sort((a,b)=>a.localeCompare(b,"fr")).filter(n=>norm(n).includes(norm(q)));
+  if(!items.length){list.innerHTML='<p class="empty">Aucun cocktail du socle ne porte ce nom. Vérifiez l\'orthographe.</p>';return}
+  items.forEach(n=>{const b=document.createElement("button");b.textContent=n;if(used.has(n)){b.disabled=true;b.title="Déjà utilisé dans la grille"}b.addEventListener("click",()=>choose(n));list.appendChild(b)});
+}
+function why(n,i){
+  const c=byName[n];const fails=[];
+  if(!R(i).f(c))fails.push("« "+R(i).label+" »");
+  if(!K(i).f(c))fails.push("« "+K(i).label+" »");
+  return n+" ne correspond pas à "+fails.join(" ni à ")+".";
+}
+function choose(n){
+  const i=current;closeSheet();
+  if(S.done||S.cells[i])return;
+  if(matchesFor(i).includes(n)){
+    S.cells[i]=n;
+    setToast("Bien vu : "+n+".", "good");
+    if(S.cells.every(Boolean)){S.done=true;S.won=true;recordStats()}
+  }else{
+    S.errors++;
+    setToast(why(n,i),"bad");
+    if(S.errors>=3){S.done=true;S.won=false;recordStats()}
+  }
+  save();render();
+  if(!S.cells[i]&&!S.done){const b=document.querySelector('.coaster[data-i="'+i+'"]');if(b){b.classList.add("miss");b.focus()}}
+  if(S.done)document.getElementById("end").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function setToast(msg,kind){const t=document.getElementById("toast");t.textContent=msg;t.className="toast"+(kind?" "+kind:"")}
+
+document.getElementById("search").addEventListener("input",e=>fillList(e.target.value));
+document.getElementById("search").addEventListener("keydown",e=>{if(e.key==="Enter"){const first=document.querySelector("#list button:not(:disabled)");if(first)first.click()}});
+document.getElementById("sheetClose").addEventListener("click",closeSheet);
+document.getElementById("sheetBack").addEventListener("click",e=>{if(e.target.id==="sheetBack")closeSheet()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.getElementById("sheetBack").classList.contains("open"))closeSheet()});
+document.getElementById("btnDaily").addEventListener("click",()=>newGame("daily"));
+document.getElementById("btnRandom").addEventListener("click",()=>newGame("random"));
+
+newGame("daily");
+</script>
+</body>
+</html>
