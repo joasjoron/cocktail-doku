@@ -6,185 +6,234 @@
 <title>Cocktail-doku</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Limelight&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#FFFFFF;
-  --ink:#2A1F14;
-  --muted:#6F604C;
-  --gold:#D9A21B;
-  --gold-deep:#9A6F08;
-  --kraft:#F1E6CF;
-  --kraft-edge:#E2D1AE;
-  --line:#E6DCC7;
-  --lime:#4E8A22;
-  --lime-soft:#E7F2DC;
-  --grenadine:#C2263B;
-  --grenadine-soft:#FBE3E6;
-  --shade:rgba(42,31,20,.45);
-  --display:"Bebas Neue","Oswald","Arial Narrow",Impact,sans-serif;
-  --body:"Montserrat","Segoe UI",system-ui,-apple-system,sans-serif;
+  --bg:#E9E7E1;
+  --surface:#F6F5F1;
+  --ink:#1F1A15;
+  --muted:#5C5448;
+  --brass:#8F611A;
+  --brass-bright:#C8923A;
+  --mat:#2A2724;
+  --mat-dot:#3B3732;
+  --on-mat:#EFE8DA;
+  --coaster:#E7DAC0;
+  --coaster-ring:#B99A62;
+  --ok:#3D7A28;
+  --ok-soft:#E1ECD6;
+  --bad:#B3263A;
+  --bad-soft:#F6DCE0;
+  --slate:#27302C;
+  --chalk:#ECEAE2;
+  --chalk-dim:#B9BDB4;
+  --frame:#6E4B2A;
+  --shade:rgba(20,15,10,.5);
+  --display:"Limelight","Georgia",serif;
+  --cond:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --body:"Barlow","Segoe UI",system-ui,-apple-system,sans-serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --paper:#1B150F;
-    --ink:#F3E9D8;
-    --muted:#BBA98F;
-    --gold:#E3AE2A;
-    --gold-deep:#F0C45A;
-    --kraft:#2E251A;
-    --kraft-edge:#44372A;
-    --line:#3B2F22;
-    --lime:#8BC45A;
-    --lime-soft:#253220;
-    --grenadine:#F0606F;
-    --grenadine-soft:#3A1F22;
-    --shade:rgba(0,0,0,.6);
+    --bg:#16110C;
+    --surface:#201912;
+    --ink:#F0E7D7;
+    --muted:#B6A78F;
+    --brass:#DCA651;
+    --brass-bright:#E9B865;
+    --mat:#0E0C0A;
+    --mat-dot:#27221D;
+    --on-mat:#EFE8DA;
+    --coaster:#3B3023;
+    --coaster-ring:#7A6340;
+    --ok:#8DC66B;
+    --ok-soft:#22301B;
+    --bad:#F26C7A;
+    --bad-soft:#3B1E23;
+    --slate:#1C2320;
+    --chalk:#E7E5DC;
+    --chalk-dim:#A7ABA2;
+    --frame:#5A3D22;
+    --shade:rgba(0,0,0,.65);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#1B150F;
-  --ink:#F3E9D8;
-  --muted:#BBA98F;
-  --gold:#E3AE2A;
-  --gold-deep:#F0C45A;
-  --kraft:#2E251A;
-  --kraft-edge:#44372A;
-  --line:#3B2F22;
-  --lime:#8BC45A;
-  --lime-soft:#253220;
-  --grenadine:#F0606F;
-  --grenadine-soft:#3A1F22;
-  --shade:rgba(0,0,0,.6);
+  --bg:#16110C;--surface:#201912;--ink:#F0E7D7;--muted:#B6A78F;--brass:#DCA651;--brass-bright:#E9B865;
+  --mat:#0E0C0A;--mat-dot:#27221D;--on-mat:#EFE8DA;--coaster:#3B3023;--coaster-ring:#7A6340;
+  --ok:#8DC66B;--ok-soft:#22301B;--bad:#F26C7A;--bad-soft:#3B1E23;--slate:#1C2320;--chalk:#E7E5DC;--chalk-dim:#A7ABA2;--frame:#5A3D22;--shade:rgba(0,0,0,.65);
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+:focus-visible{outline:3px solid var(--brass-bright);outline-offset:2px}
+svg.ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-.band{background:var(--gold);color:#2A1F14}
-.band-inner{max-width:620px;margin:0 auto;padding:18px 20px 14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.band h1{font-family:var(--display);font-weight:400;font-size:clamp(44px,11vw,64px);line-height:.85;margin:0;letter-spacing:.01em}
-.band p{margin:6px 0 0;font-size:13px;font-weight:500;max-width:34ch}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+
+header.top{padding:22px 0 10px}
+.overline{font-family:var(--cond);font-weight:600;font-size:17px;color:var(--brass);margin:0}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(42px,11vw,66px);line-height:.95;margin:2px 0 0;letter-spacing:.01em}
+.tools{display:flex;gap:14px;align-items:flex-end;color:var(--brass);margin:14px 0 6px}
+.tools svg{width:30px;height:40px;flex:none}
+.tools .spoon{flex:1;height:10px;margin-bottom:8px;opacity:.75;
+  background:repeating-linear-gradient(115deg,transparent 0 5px,var(--brass) 5px 7px,transparent 7px 10px);
+  border-radius:3px}
+.bar-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}
 .modes{display:flex;gap:6px}
-.modes button{border:2px solid #2A1F14;background:transparent;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;color:#2A1F14}
-.modes button[aria-pressed="true"]{background:#2A1F14;color:#F7E7BD}
+.modes button{border:1.5px solid var(--ink);background:transparent;border-radius:999px;padding:6px 14px;font-family:var(--cond);font-size:16px;font-weight:600;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.lives{display:flex;gap:4px;align-items:flex-end;color:var(--brass)}
+.lives svg{width:22px;height:30px}
+.lives svg.full path{fill:var(--brass)}
+.lives svg.lost{opacity:.35}
+.gridname{font-family:var(--cond);font-size:16px;color:var(--muted);font-weight:500}
 
-main{max-width:620px;margin:0 auto;padding:18px 16px 40px}
-.status{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
-.status .label{font-size:13px;color:var(--muted);font-weight:500}
-.lives{display:flex;gap:6px;align-items:center}
-.cherry{width:16px;height:16px;border-radius:50%;background:var(--grenadine);border:2px solid var(--grenadine);transition:background .25s}
-.cherry.lost{background:transparent}
+.mat{margin-top:8px;background-color:var(--mat);
+  background-image:radial-gradient(circle at 50% 50%,var(--mat-dot) 0 3px,transparent 3.5px);
+  background-size:13px 13px;border-radius:16px;padding:14px 10px 16px;
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.04),0 10px 24px -14px rgba(0,0,0,.6)}
+.grid{display:grid;grid-template-columns:minmax(66px,.85fr) repeat(3,1fr);gap:8px;align-items:center}
+.head{font-family:var(--cond);font-size:15px;line-height:1.1;font-weight:600;color:var(--on-mat);padding:2px}
+.head small{display:block;font-family:var(--body);font-weight:500;color:var(--brass-bright);font-size:11.5px;margin-bottom:3px}
+.head.col{text-align:center;align-self:end;padding-bottom:6px}
+.head.row{text-align:right;padding-right:2px}
+.corner{display:flex;justify-content:center;color:var(--brass-bright)}
+.corner svg{width:28px;height:36px}
 
-.grid{display:grid;grid-template-columns:minmax(74px,.9fr) repeat(3,1fr);gap:8px;align-items:center}
-.head{font-size:12.5px;line-height:1.25;font-weight:600;padding:2px}
-.head small{display:block;font-weight:500;color:var(--gold-deep);font-size:11px;margin-bottom:2px}
-.head.col{text-align:center;align-self:end;padding-bottom:4px}
-.head.row{text-align:right;padding-right:4px}
-.corner{font-family:var(--display);font-size:22px;color:var(--muted);text-align:center;line-height:1}
-
-.coaster{aspect-ratio:1;width:100%;max-width:132px;justify-self:center;border-radius:50%;border:none;cursor:pointer;
-  background:radial-gradient(circle at 50% 50%,var(--kraft) 0 60%,var(--kraft-edge) 61% 63%,var(--kraft) 64% 100%);
-  box-shadow:inset 0 0 0 2px var(--kraft-edge);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10%;text-align:center;position:relative;transition:transform .15s}
-.coaster:hover:not(:disabled){transform:rotate(-4deg)}
-.coaster .q{font-family:var(--display);font-size:clamp(26px,7vw,38px);line-height:1;color:var(--gold-deep)}
-.coaster .n{font-size:10.5px;color:var(--muted);font-weight:500;line-height:1.2;margin-top:2px}
-.coaster .name{font-family:var(--display);font-size:clamp(15px,4.4vw,22px);line-height:.95;letter-spacing:.01em}
-.coaster.ok{background:radial-gradient(circle at 50% 50%,var(--lime-soft) 0 60%,var(--lime) 61% 63%,var(--lime-soft) 64% 100%);box-shadow:inset 0 0 0 2px var(--lime);cursor:default}
+.coaster{aspect-ratio:1;width:100%;max-width:134px;justify-self:center;border-radius:50%;border:none;cursor:pointer;position:relative;
+  background:var(--coaster);
+  box-shadow:inset 0 0 0 5px var(--coaster),inset 0 0 0 6.5px var(--coaster-ring),0 3px 0 rgba(0,0,0,.35);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12%;text-align:center;transition:transform .15s}
+.coaster:hover:not(:disabled){transform:translateY(-2px) rotate(-3deg)}
+.coaster .q{font-family:var(--display);font-size:clamp(26px,7vw,40px);line-height:1;color:var(--brass)}
+.coaster .n{font-family:var(--cond);font-size:13px;color:var(--muted);font-weight:500;line-height:1.1;margin-top:3px}
+.coaster svg{width:34%;height:auto;margin-bottom:3px}
+.coaster .name{font-family:var(--cond);font-weight:700;font-size:clamp(13px,3.6vw,17px);line-height:1}
+.coaster .of{font-size:10px;color:var(--muted);line-height:1.1;margin-top:2px}
+.coaster.ok{background:var(--ok-soft);box-shadow:inset 0 0 0 5px var(--ok-soft),inset 0 0 0 6.5px var(--ok),0 3px 0 rgba(0,0,0,.35);cursor:default;color:var(--ok)}
 .coaster.ok .name{color:var(--ink)}
-.coaster.reveal{cursor:default;background:radial-gradient(circle at 50% 50%,var(--grenadine-soft) 0 60%,var(--grenadine) 61% 63%,var(--grenadine-soft) 64% 100%);box-shadow:inset 0 0 0 2px var(--grenadine)}
-.coaster.reveal .name{color:var(--muted);font-size:clamp(13px,3.8vw,19px)}
+.coaster.reveal{background:var(--bad-soft);box-shadow:inset 0 0 0 5px var(--bad-soft),inset 0 0 0 6.5px var(--bad),0 3px 0 rgba(0,0,0,.35);cursor:default;color:var(--bad)}
+.coaster.reveal .name{color:var(--muted)}
 .coaster.miss{animation:miss .4s}
+.coaster.pop{animation:pop .35s}
 @keyframes miss{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
 
-.toast{min-height:44px;margin:16px 0 0;font-size:14px;font-weight:500;text-align:center}
-.toast.bad{color:var(--grenadine)}
-.toast.good{color:var(--lime)}
+.toast{min-height:48px;margin:14px 0 0;font-size:15px;font-weight:500;text-align:center}
+.toast.bad{color:var(--bad)}
+.toast.good{color:var(--ok)}
 
-.end{margin-top:14px;border-top:3px solid var(--gold);padding-top:16px}
-.end h2{font-family:var(--display);font-weight:400;font-size:38px;line-height:1;margin:0 0 6px}
+.end{margin-top:6px;border-top:2px solid var(--brass);padding-top:16px}
+.end h2{font-family:var(--display);font-weight:400;font-size:34px;line-height:1.05;margin:0 0 6px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
 .stat{text-align:center}
-.stat b{display:block;font-family:var(--display);font-size:32px;font-weight:400;line-height:1}
-.stat span{font-size:11.5px;color:var(--muted)}
-.btn{display:inline-block;background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px;cursor:pointer}
+.stat b{display:block;font-family:var(--display);font-size:30px;font-weight:400;line-height:1}
+.stat span{font-family:var(--cond);font-size:14px;color:var(--muted)}
+.btn{display:inline-block;background:var(--ink);color:var(--surface);border:none;border-radius:999px;padding:10px 18px;font-family:var(--cond);font-weight:600;font-size:17px;cursor:pointer}
 .answers{margin-top:16px}
-.answers h3{font-size:14px;margin:0 0 8px}
+.answers h3{font-family:var(--cond);font-size:19px;margin:0 0 6px}
 .answers ul{margin:0;padding:0;list-style:none}
-.answers li{padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
-.answers li b{display:block;font-size:12.5px;color:var(--gold-deep)}
+.answers li{padding:8px 0;border-bottom:1px solid color-mix(in srgb,var(--muted) 30%,transparent);font-size:14px}
+.answers li b{display:block;font-family:var(--cond);font-size:15px;color:var(--brass)}
 
-details.rules{margin-top:26px;border-top:1px solid var(--line);padding-top:12px}
-details.rules summary{cursor:pointer;font-weight:600}
+.board{margin-top:30px;background:var(--slate);color:var(--chalk);border:7px solid var(--frame);border-radius:6px;padding:18px 16px 10px;
+  box-shadow:0 10px 24px -16px rgba(0,0,0,.7)}
+.board h2{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1;margin:0}
+.board .sub{color:var(--chalk-dim);margin:4px 0 12px;font-size:14.5px}
+.board details{border-top:1px dashed rgba(236,234,226,.25);padding:4px 0}
+.board summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px;padding:8px 0}
+.board summary::-webkit-details-marker{display:none}
+.board summary svg{width:30px;height:36px;color:var(--brass-bright);flex:none}
+.board summary .t{font-family:var(--cond);font-weight:700;font-size:22px;line-height:1}
+.board summary .m{display:block;font-family:var(--body);font-weight:400;font-size:13.5px;color:var(--chalk-dim);margin-top:3px}
+.board summary::after{content:"+";margin-left:auto;font-family:var(--cond);font-size:24px;color:var(--brass-bright)}
+.board details[open] summary::after{content:"−"}
+.fiche{padding:2px 0 14px 42px;font-size:15px}
+.fiche ul.rec{margin:0 0 10px;padding:0;list-style:none}
+.fiche ul.rec li{font-family:var(--cond);font-size:18px;font-weight:500;padding:1px 0}
+.fiche dl{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;margin:0 0 10px}
+.fiche dt{color:var(--chalk-dim);font-size:14px}
+.fiche dd{margin:0;font-size:14.5px}
+.fiche p{margin:0 0 8px;font-size:14.5px;max-width:62ch}
+.fiche .var{color:var(--chalk-dim)}
+.fiche .var b{color:var(--chalk);font-weight:600}
+
+details.rules{margin:26px 0 40px;border-top:1px solid color-mix(in srgb,var(--muted) 35%,transparent);padding-top:12px}
+details.rules summary{cursor:pointer;font-family:var(--cond);font-weight:600;font-size:19px}
 details.rules ul{padding-left:18px;margin:10px 0 0}
-details.rules li{margin-bottom:6px;font-size:14px;max-width:66ch}
+details.rules li{margin-bottom:6px;font-size:15px;max-width:66ch}
 
 .sheet-back{position:fixed;inset:0;background:var(--shade);display:none;align-items:flex-end;justify-content:center;z-index:10}
 .sheet-back.open{display:flex}
-.sheet{background:var(--paper);width:100%;max-width:520px;max-height:82vh;border-radius:18px 18px 0 0;display:flex;flex-direction:column;
+.sheet{background:var(--surface);width:100%;max-width:520px;max-height:84vh;border-radius:18px 18px 0 0;display:flex;flex-direction:column;
   padding:16px 16px calc(12px + env(safe-area-inset-bottom,0px))}
 @media (min-width:640px){.sheet-back{align-items:center}.sheet{border-radius:18px;max-height:78vh}}
 .sheet header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.sheet h2{font-family:var(--display);font-weight:400;font-size:26px;line-height:1;margin:0}
-.sheet .crit{font-size:13px;color:var(--muted);margin:4px 0 10px}
-.close{background:none;border:none;font-size:26px;line-height:1;cursor:pointer;padding:0 4px;color:var(--muted)}
-.search{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
-.search:focus{border-color:var(--gold);outline:none}
+.sheet h2{font-family:var(--display);font-weight:400;font-size:24px;line-height:1.1;margin:0}
+.sheet .crit{font-family:var(--cond);font-size:16px;color:var(--brass);margin:4px 0 10px;font-weight:600}
+.close{background:none;border:none;font-size:28px;line-height:1;cursor:pointer;padding:0 4px;color:var(--muted)}
+.search{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:2px solid color-mix(in srgb,var(--muted) 35%,transparent);border-radius:10px;background:var(--surface);color:var(--ink)}
+.search:focus{border-color:var(--brass);outline:none}
 .list{overflow:auto;margin-top:10px;-webkit-overflow-scrolling:touch}
-.list button{display:block;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);padding:11px 4px;cursor:pointer;font-size:15px}
-.list button:hover:not(:disabled){background:var(--kraft)}
+.list button{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid color-mix(in srgb,var(--muted) 22%,transparent);padding:10px 4px;cursor:pointer;font-size:16px}
+.list button span.of{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.list button:hover:not(:disabled){background:color-mix(in srgb,var(--brass) 12%,transparent)}
 .list button:disabled{color:var(--muted);text-decoration:line-through;cursor:not-allowed}
 .list .empty{padding:14px 4px;color:var(--muted);font-size:14px}
 
+@media (max-width:420px){.mat{padding:12px 6px 14px}.grid{gap:6px}.head{font-size:13.5px}.fiche{padding-left:0}.tools{gap:10px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="band">
-  <div class="band-inner">
-    <div>
-      <h1>Cocktail-doku</h1>
-      <p id="subtitle">Remplissez les 9 sous-verres avec des cocktails du socle.</p>
+<div class="wrap">
+  <header class="top">
+    <p class="overline">Le jeu du barman, sur le Socle des Cocktails de Référence</p>
+    <h1>Cocktail-doku</h1>
+    <div class="tools" aria-hidden="true" id="tools"></div>
+    <div class="bar-row">
+      <div class="modes" role="group" aria-label="Choix de la grille">
+        <button id="btnDaily" aria-pressed="true">Grille du jour</button>
+        <button id="btnRandom" aria-pressed="false">Nouvelle grille</button>
+      </div>
+      <div class="lives" id="lives" aria-label="Erreurs restantes"></div>
     </div>
-    <div class="modes" role="group" aria-label="Choix de la grille">
-      <button id="btnDaily" aria-pressed="true">Grille du jour</button>
-      <button id="btnRandom" aria-pressed="false">Nouvelle grille</button>
-    </div>
-  </div>
+  </header>
+
+  <main>
+    <span class="gridname" id="gridName"></span>
+    <div class="mat"><div class="grid" id="grid"></div></div>
+    <p class="toast" id="toast" role="status" aria-live="polite"></p>
+    <section class="end" id="end" hidden></section>
+
+    <section class="board" aria-labelledby="boardTitle">
+      <h2 id="boardTitle">À l'ardoise aujourd'hui</h2>
+      <p class="sub" id="boardSub"></p>
+      <div id="boardList"></div>
+    </section>
+
+    <details class="rules">
+      <summary>Règles et cas particuliers</summary>
+      <ul>
+        <li>Chaque sous-verre doit recevoir un cocktail qui respecte à la fois le critère de sa ligne et celui de sa colonne.</li>
+        <li>Un cocktail ne sert qu'une fois par grille. Une bonne réponse est définitive. Trois doseurs renversés, et la partie s'arrête.</li>
+        <li>Le chiffre sous le « ? » indique combien de cocktails conviennent, variantes comprises.</li>
+        <li>Les 30 variantes du référentiel sont jouables (Rob Roy, Boulevardier, White Lady, Mimosa…). Elles reprennent la fiche du cocktail d'origine, sauf ce que la variante change.</li>
+        <li>Les variantes ne comptent pas pour les critères de TAV ni d'histoire, sauf le Martinez (1884) et la Virgin Mary (sans alcool).</li>
+        <li>Le Sour, le Fizz et le Tom Collins se font avec une eau-de-vie au choix : ils ne comptent pour aucun alcool précis. La cachaça n'est pas du rhum, le pisco non plus.</li>
+        <li>Le Mint Julep compte pour le whisky et le cognac. L'Old-Fashioned compte pour le whisky.</li>
+        <li>« Menthe » compte la menthe dans la recette ou en garniture. « Zeste » inclut le Dry Martini (olive ou zeste).</li>
+        <li>« Bitter » désigne l'amer type Campari, à ne pas confondre avec l'aromatic bitters. La gentiane du White Negroni ne compte pas.</li>
+        <li>« Versé sans mélanger » : un ingrédient ajouté en dernier par-dessus (float).</li>
+        <li>L'ardoise du jour suit le programme de révision sur 12 jours : vodka, rhum, gin, tequila, whisky, cognac, bulles, puis vins et amers.</li>
+      </ul>
+    </details>
+  </main>
 </div>
-
-<main>
-  <div class="status">
-    <span class="label" id="gridName"></span>
-    <div class="lives" aria-label="Erreurs restantes" id="lives"></div>
-  </div>
-
-  <div class="grid" id="grid"></div>
-  <p class="toast" id="toast" role="status" aria-live="polite"></p>
-  <section class="end" id="end" hidden></section>
-
-  <details class="rules">
-    <summary>Règles et cas particuliers</summary>
-    <ul>
-      <li>Chaque sous-verre doit contenir un cocktail qui respecte à la fois le critère de sa ligne et celui de sa colonne.</li>
-      <li>Un cocktail ne peut être utilisé qu'une seule fois par grille.</li>
-      <li>Une bonne réponse est définitive. Trois erreurs, et la partie s'arrête.</li>
-      <li>Le chiffre sous le « ? » indique combien de cocktails du socle conviennent.</li>
-      <li>Le Sour et le Fizz se font avec une eau-de-vie au choix : ils ne comptent pour aucun alcool précis.</li>
-      <li>La cachaça (Caipirinha) n'est pas du rhum.</li>
-      <li>Le Mint Julep compte pour le whisky et le cognac. L'Old-Fashioned compte pour le whisky.</li>
-      <li>« Menthe » compte la menthe dans la recette ou en garniture. « Zeste » inclut le Dry Martini (olive ou zeste).</li>
-      <li>« Bitter » désigne l'amer type Campari (Negroni, Americano, Spritz), à ne pas confondre avec l'aromatic bitters.</li>
-      <li>« Versé sans mélanger » : un ingrédient ajouté en dernier par-dessus (float).</li>
-    </ul>
-  </details>
-</main>
 
 <div class="sheet-back" id="sheetBack">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
@@ -195,51 +244,155 @@ details.rules li{margin-bottom:6px;font-size:14px;max-width:66ch}
       </div>
       <button class="close" id="sheetClose" aria-label="Fermer">×</button>
     </header>
-    <input class="search" id="search" type="search" placeholder="Rechercher un cocktail" autocomplete="off" aria-label="Rechercher un cocktail">
+    <input class="search" id="search" type="search" placeholder="Rechercher un cocktail ou une variante" autocomplete="off" aria-label="Rechercher un cocktail">
     <div class="list" id="list"></div>
   </div>
 </div>
 
 <script>
+/* ---------- Icônes : verrerie et matériel ---------- */
+const GLASS={
+ "Coupe":'<path d="M5 9h30c0 8-7 13-15 13S5 17 5 9z"/><path d="M20 22v15M13 40h14"/>',
+ "Martini":'<path d="M5 7h30L20 23z"/><path d="M20 23v14M13 40h14"/>',
+ "Nick & Nora":'<path d="M9 6h22c0 11-4 17-11 17S9 17 9 6z"/><path d="M20 23v14M13 40h14"/>',
+ "Flûte":'<path d="M14 3h12l-1 19c0 3-2 5-5 5s-5-2-5-5z"/><path d="M20 27v10M14 40h12"/>',
+ "Vin":'<path d="M11 5h18c0 12-3 18-9 18s-9-6-9-18z"/><path d="M20 23v14M13 40h14"/>',
+ "Rocks":'<path d="M8 15h24l-2 25H10z"/><path d="M10.5 33h19"/>',
+ "Highball":'<path d="M12 3h16l-1.5 39h-13z"/><path d="M13 34h14"/>',
+ "Julep":'<path d="M10 11h20l-2 27H12z"/><path d="M11 17h18M12 38h16v3H12z"/>',
+ "Mule":'<path d="M8 11h21v25c0 3-2 5-5 5H13c-3 0-5-2-5-5z"/><path d="M29 16h4c2 0 3 2 3 4v7c0 2-1 4-3 4h-4"/>'
+};
+const glass=v=>'<svg class="ico" viewBox="0 0 40 44" aria-hidden="true">'+(GLASS[v]||GLASS.Rocks)+'</svg>';
+const JIGGER='<path d="M12 3h16l-6 19h-4z"/><path d="M18 22h4l6 20H12z"/>';
+const TOOLS={
+ shaker:'<path d="M13 20h14l-2.5 23h-9z"/><path d="M14 14h12v6H14z"/><path d="M16.5 8h7v6h-7z"/><path d="M18 4h4v4h-4z"/>',
+ jigger:JIGGER,
+ pilon:'<path d="M17 3h6l1.5 30h-9z"/><path d="M15.5 33h9v9h-9z"/>',
+ strainer:'<circle cx="15" cy="24" r="9"/><path d="M24 24h14"/><path d="M8 24c2-3 3 3 5 0s3 3 5 0 3 3 5 0"/>'
+};
+document.getElementById("tools").innerHTML=
+  '<svg class="ico" viewBox="0 0 40 46">'+TOOLS.shaker+'</svg>'+
+  '<svg class="ico" viewBox="0 0 40 46">'+TOOLS.jigger+'</svg>'+
+  '<span class="spoon"></span>'+
+  '<svg class="ico" viewBox="0 0 40 46">'+TOOLS.strainer+'</svg>'+
+  '<svg class="ico" viewBox="0 0 40 46">'+TOOLS.pilon+'</svg>';
+
 /* ---------- Les 36 cocktails du socle ---------- */
-const C = [
- {n:"Aviation",alc:["gin"],m:"shaker",v:"Nick & Nora",cat:"short",t:"all",ing:["citron"],gar:["cerise"],tav:28,yr:1916},
- {n:"Bamboo",alc:["vermouth"],m:"melange",v:"Nick & Nora",cat:"short",t:"before",ing:[],gar:["zeste"],tav:15,yr:1878},
- {n:"Bramble",alc:["gin"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:[],pilee:1,float:1,tav:25,yr:1980},
- {n:"Caipirinha",alc:["cachaca"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["citronvert","sucre"],gar:["aucune"],pilee:1,pilon:1,tav:40,yr:1948},
- {n:"Cosmopolitan",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","triplesec"],gar:["zeste"],tav:27,yr:1988},
- {n:"Daiquiri",alc:["rhum"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","sucre"],gar:["aucune"],tav:27,yr:1900},
- {n:"Dry Martini",alc:["gin","vermouth"],m:"melange",v:"Martini",cat:"short",t:"before",ing:[],gar:["zeste"],tav:35,yr:1904},
- {n:"Espresso Martini",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"after",ing:["sucre"],gar:[],tav:27,yr:1983},
- {n:"Gin Basil Smash",alc:["gin"],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:[],tav:25,yr:2008},
- {n:"Manhattan",alc:["whisky","vermouth"],m:"melange",v:"Nick & Nora",cat:"short",t:"before",ing:["bitters"],gar:["cerise"],tav:35,yr:1880},
- {n:"Margarita",alc:["tequila"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","triplesec"],gar:[],tav:34,yr:1953},
- {n:"Mint Julep",alc:["whisky","cognac"],m:"direct",v:"Julep",cat:"short",t:"all",ing:["sucre","menthe"],gar:["menthe"],pilee:1,pilon:1,tav:40,yr:1807},
- {n:"Negroni",alc:["gin","vermouth","bitter"],m:"direct",v:"Rocks",cat:"short",t:"before",ing:[],gar:[],tav:26,yr:null},
- {n:"Old-Fashioned",alc:["whisky"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["bitters","sucre"],gar:["zeste","cerise"],pilon:1,tav:40,yr:1806},
- {n:"Penicillin",alc:["whisky"],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron"],gar:[],float:1,tav:25,yr:2005},
- {n:"Pornstar Martini",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:[],gar:[],tav:18,yr:2002},
- {n:"Sidecar",alc:["cognac"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citron","triplesec"],gar:["aucune"],tav:36,yr:1922},
- {n:"Sour",alc:[],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:["cerise"],tav:28,yr:1862},
- {n:"Americano",alc:["vermouth","bitter"],m:"direct",v:"Highball",cat:"long",t:"before",ing:["gazeuse"],gar:[],tav:13,yr:1860},
- {n:"Bellini",alc:["bulles"],m:"direct",v:"Flûte",cat:"long",t:"all",ing:[],gar:["aucune"],tav:8,yr:1948},
- {n:"Bloody Mary",alc:["vodka"],m:"direct",v:"Highball",cat:"long",t:"before",ing:["citron"],gar:[],tav:13,yr:1939},
- {n:"Champagne Cocktail",alc:["cognac","bulles"],m:"direct",v:"Flûte",cat:"long",t:"all",ing:["bitters","sucre"],gar:["zeste"],tav:8,yr:1862},
- {n:"Dark and Stormy",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert"],gar:[],float:1,tav:11,yr:null},
- {n:"Fizz",alc:[],m:"shaker",v:"Highball",cat:"long",t:"all",ing:["citron","sucre","gazeuse"],gar:[],tav:13,yr:1876},
- {n:"French 75",alc:["gin","bulles"],m:"shaker",v:"Flûte",cat:"long",t:"all",ing:["citron","sucre"],gar:["zeste"],tav:16,yr:1927},
- {n:"Horse's Neck",alc:["cognac"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["bitters"],gar:["zeste"],tav:11,yr:1890},
- {n:"Mai Tai",alc:["rhum"],m:"shaker",v:"Rocks",cat:"long",t:"all",ing:["citronvert","triplesec"],gar:["menthe"],pilee:1,tav:30,yr:1953},
- {n:"Mojito",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","sucre","menthe","gazeuse"],gar:["menthe"],pilon:1,tav:13,yr:1929},
- {n:"Moscow Mule",alc:["vodka"],m:"direct",v:"Mule",cat:"long",t:"all",ing:["citronvert"],gar:[],tav:13,yr:1941},
- {n:"Paloma",alc:["tequila"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","gazeuse"],gar:[],tav:10,yr:1990},
- {n:"Piña Colada",alc:["rhum"],m:"shaker",v:"Highball",cat:"long",t:"all",ing:[],gar:["cerise"],tav:13,yr:1954},
- {n:"Planter's Punch",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["bitters","orange"],gar:["cerise"],float:1,tav:16,yr:1638},
- {n:"Rum Swizzle",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","sucre","bitters"],gar:["zeste","menthe"],pilee:1,tav:20,yr:1788},
- {n:"Sex on the Beach",alc:["vodka"],m:"shaker",v:"Highball",cat:"long",t:"all",ing:["orange"],gar:[],tav:15,yr:1980},
- {n:"Spritz",alc:["bitter","bulles"],m:"direct",v:"Vin",cat:"long",t:"before",ing:["gazeuse"],gar:[],tav:16,yr:null},
- {n:"Tequila Sunrise",alc:["tequila"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["orange"],gar:["cerise"],float:1,tav:13,yr:null}
+const BASE = [
+ {n:"Aviation",alc:["gin"],m:"shaker",v:"Nick & Nora",cat:"short",t:"all",ing:["citron"],gar:["cerise"],tav:28,yr:1916,
+  r:"10 ml jus de citron|15 ml maraschino|5 ml crème de violette|40 ml gin",gt:"Cerise à l'eau-de-vie",h:"Publié par Hugo Ensslin dans « Recipes for Mixed Drinks », à New York, en 1916."},
+ {n:"Bamboo",alc:["vermouth"],m:"melange",v:"Nick & Nora",cat:"short",t:"before",ing:[],gar:["zeste"],tav:15,yr:1878,
+  r:"35 ml sherry fino|35 ml vermouth dry|2 traits bitters orange",gt:"Zeste de citron exprimé",h:"Répandu en Malaisie en 1878, popularisé aux États-Unis puis au Japon par Louis Eppinger. Le cuban roll peut aussi être utilisé.",vt:"Selon les livres, les ratios sherry / vermouth varient."},
+ {n:"Bramble",alc:["gin"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:[],pilee:1,float:1,tav:25,yr:1980,
+  r:"5 ml sirop de sucre|15 ml jus de citron|40 ml gin|10 ml crème de mûre, versée sans mélanger",gt:"Demi-tranche de citron et deux mûres, sur glace pilée",h:"Créé par Dick Bradsell au Fred's Club, à Londres, dans les années 1980."},
+ {n:"Caipirinha",alc:["cachaca"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["citronvert","sucre"],gar:["aucune"],pilee:1,pilon:1,tav:40,yr:1948,
+  r:"1/2 citron vert en morceaux, pilé|1 bar spoon de sucre en poudre|40 ml cachaça",gt:"Aucune, paille courte, glace pilée",h:"Cocktail national du Brésil, recette publiée pour la première fois à l'été 1948."},
+ {n:"Cosmopolitan",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","triplesec"],gar:["zeste"],tav:27,yr:1988,
+  r:"5 ml jus de citron vert|20 ml nectar de cranberry|15 ml triple sec|30 ml vodka",gt:"Zeste de citron vert exprimé",h:"Mis au point par Toby Cecchini au restaurant Odéon, à New York, en 1988."},
+ {n:"Daiquiri",alc:["rhum"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","sucre"],gar:["aucune"],tav:27,yr:1900,
+  r:"1 bar spoon de sucre en poudre|20 ml jus de citron vert|40 ml ron cubain 3 años",gt:"Aucune",h:"Premier cocktail national de Cuba, attribué à Jennings S. Cox, ingénieur de la mine de Daiquiri, vers 1900."},
+ {n:"Dry Martini",alc:["gin","vermouth"],m:"melange",v:"Martini",cat:"short",t:"before",ing:[],gar:["zeste"],tav:35,yr:1904,
+  r:"15 ml vermouth dry|55 ml gin",gt:"Olive verte ou zeste de citron exprimé",h:"Évolution du Martinez (1884). Première recette publiée par Frank Newman dans « American Bar », à Paris, en 1904."},
+ {n:"Espresso Martini",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"after",ing:["sucre"],gar:[],tav:27,yr:1983,
+  r:"5 ml sirop de sucre|25 ml café espresso|10 ml liqueur de café|30 ml vodka",gt:"Trois grains de café sur la mousse",h:"Mis au point par Dick Bradsell à la Soho Brasserie de Londres en 1983. Seul after dinner du socle."},
+ {n:"Gin Basil Smash",alc:["gin"],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:[],tav:25,yr:2008,
+  r:"15 ml sirop de sucre|20 ml jus de citron|50 ml gin|10 feuilles de basilic",gt:"Tête de basilic frais",h:"Créé par Jörg Meyer au bar Le Lion – Café de Paris, à Hambourg, en 2008."},
+ {n:"Manhattan",alc:["whisky","vermouth"],m:"melange",v:"Nick & Nora",cat:"short",t:"before",ing:["bitters"],gar:["cerise"],tav:35,yr:1880,
+  r:"2 traits aromatic bitters|20 ml vermouth rouge|50 ml whiskey américain",gt:"Cerise à l'eau-de-vie",h:"Considéré comme le premier cocktail apéritif, attribué à Georges Black, du Manhattan Inn de New York, vers 1880."},
+ {n:"Margarita",alc:["tequila"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citronvert","triplesec"],gar:[],tav:34,yr:1953,
+  r:"10 ml jus de citron vert|20 ml triple sec|40 ml tequila",gt:"Givrage au sel fin, proposé à la commande",h:"Apparaît sous plusieurs noms à la fin des années 1930 ; son nom définitif est adopté aux États-Unis en 1953."},
+ {n:"Mint Julep",alc:["whisky","cognac"],m:"direct",v:"Julep",cat:"short",t:"all",ing:["sucre","menthe"],gar:["menthe"],pilee:1,pilon:1,tav:40,yr:1807,
+  r:"10 feuilles de menthe, pilées|2 bar spoons de sucre en poudre|50 ml eau-de-vie brune (cognac ou whiskey américain)",gt:"Tête de menthe, paille courte, glace pilée",h:"La boisson américaine de l'été. Première recette avec glace publiée en Virginie en 1807."},
+ {n:"Negroni",alc:["gin","vermouth","bitter"],m:"direct",v:"Rocks",cat:"short",t:"before",ing:[],gar:[],tav:26,yr:null,
+  r:"30 ml vermouth rouge|30 ml bitter|30 ml gin",gt:"Demi-tranche d'orange",h:"Plusieurs recettes circulent à Paris à la fin des années 1920 ; le nom et la recette sont publiés en Italie en 1947."},
+ {n:"Old-Fashioned",alc:["whisky"],m:"direct",v:"Rocks",cat:"short",t:"all",ing:["bitters","sucre"],gar:["zeste","cerise"],pilon:1,tav:40,yr:1806,
+  r:"1 morceau de sucre brun imbibé|2 traits aromatic bitters|50 ml eau-de-vie brune (20 ml puis 30 ml)",gt:"Zeste d'orange exprimé et cerise à l'eau-de-vie",h:"Première recette mise au point aux États-Unis en 1806. La recette originelle privilégie le whiskey américain."},
+ {n:"Penicillin",alc:["whisky"],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron"],gar:[],float:1,tav:25,yr:2005,
+  r:"20 ml jus de citron|10 ml sirop de miel|10 ml jus de gingembre frais|40 ml blend whisky|10 ml whisky tourbé, versé sans mélanger",gt:"Lamelle de gingembre",h:"Créé par Sam Ross au bar Milk & Honey, à New York, en 2005."},
+ {n:"Pornstar Martini",alc:["vodka"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:[],gar:[],tav:18,yr:2002,
+  r:"10 ml sirop de vanille|30 ml purée de fruit de la passion|20 ml liqueur de fruit de la passion|30 ml vodka vanille",gt:"Demi-fruit de la passion, champagne servi à part en verre shot",h:"Créé par Douglas Ankra au bar Townhouse, à Londres, en 2002."},
+ {n:"Sidecar",alc:["cognac"],m:"shaker",v:"Coupe",cat:"short",t:"all",ing:["citron","triplesec"],gar:["aucune"],tav:36,yr:1922,
+  r:"10 ml jus de citron|20 ml triple sec|40 ml cognac",gt:"Aucune",h:"Publié en 1922 à Londres par Robert Vermeire, qui le dit très populaire en France."},
+ {n:"Sour",alc:[],m:"shaker",v:"Rocks",cat:"short",t:"all",ing:["citron","sucre"],gar:["cerise"],tav:28,yr:1862,
+  r:"1 bar spoon de sucre en poudre|20 ml jus de citron|20 ml blanc d'œuf ou aquafaba|50 ml spiritueux",gt:"Cerise à l'eau-de-vie",h:"Variante du Whiskey Sour publié dans « The Bartender's Guide » dès 1862. Technique du dry shake.",vt:"Sans émulsifiant, il se sert en verre Martini."},
+ {n:"Americano",alc:["vermouth","bitter"],m:"direct",v:"Highball",cat:"long",t:"before",ing:["gazeuse"],gar:[],tav:13,yr:1860,
+  r:"20 ml vermouth rouge|50 ml bitter|50 ml eau gazeuse",gt:"Demi-tranches d'orange et de citron",h:"Créé au Gaspare Campari's de Milan en 1860, d'abord appelé Milano-Torino."},
+ {n:"Bellini",alc:["bulles"],m:"direct",v:"Flûte",cat:"long",t:"all",ing:[],gar:["aucune"],tav:8,yr:1948,
+  r:"40 ml nectar ou purée de pêche blanche|80 ml champagne",gt:"Aucune",h:"Inventé par Giuseppe Cipriani au Harry's Bar de Venise en 1948, en hommage au peintre Giovanni Bellini."},
+ {n:"Bloody Mary",alc:["vodka"],m:"direct",v:"Highball",cat:"long",t:"before",ing:["citron"],gar:[],tav:13,yr:1939,
+  r:"Sel au céleri|2 gouttes de Tabasco|1 trait de sauce anglaise|10 ml jus de citron|40 ml vodka|70 ml jus de tomate",gt:"Demi-tranche de citron, branche de céleri (facultative), agitateur",h:"Première recette publiée dans la presse américaine en 1939."},
+ {n:"Champagne Cocktail",alc:["cognac","bulles"],m:"direct",v:"Flûte",cat:"long",t:"all",ing:["bitters","sucre"],gar:["zeste"],tav:8,yr:1862,
+  r:"1 morceau de sucre blanc imbibé|1 trait aromatic bitters|10 ml cognac|110 ml champagne",gt:"Zeste de citron exprimé",h:"Premier cocktail au champagne, mentionné dès 1855, publié par Jerry Thomas en 1862."},
+ {n:"Dark and Stormy",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert"],gar:[],float:1,tav:11,yr:null,
+  r:"15 ml jus de citron vert|100 ml ginger beer|40 ml black rum, versé sans mélanger",gt:"Quartier de citron vert, agitateur",h:"Boisson nationale des Bermudes ; la famille Gosling a déposé la marque en 1991 (rhum Black Seal)."},
+ {n:"Fizz",alc:[],m:"shaker",v:"Highball",cat:"long",t:"all",ing:["citron","sucre","gazeuse"],gar:[],tav:13,yr:1876,
+  r:"10 ml sirop de sucre|20 ml jus de citron|40 ml eau-de-vie|50 ml eau gazeuse",gt:"Tranche de citron",h:"Gin Fizz publié par Jerry Thomas en 1876. Autrefois servi sans glace."},
+ {n:"French 75",alc:["gin","bulles"],m:"shaker",v:"Flûte",cat:"long",t:"all",ing:["citron","sucre"],gar:["zeste"],tav:16,yr:1927,
+  r:"10 ml sirop de sucre|20 ml jus de citron|40 ml gin|50 ml champagne",gt:"Zeste de citron exprimé",h:"D'abord au calvados ; Harry McElhone le passe au champagne au Harry's Bar de Paris en 1925. Publié aux États-Unis en 1927."},
+ {n:"Horse's Neck",alc:["cognac"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["bitters"],gar:["zeste"],tav:11,yr:1890,
+  r:"3 traits aromatic bitters|40 ml cognac|100 ml ginger ale",gt:"Long zeste de citron sur le bord du verre",h:"Recette originale publiée en 1890, sans alcool ; le cognac ou le whiskey arrive quelques années plus tard."},
+ {n:"Mai Tai",alc:["rhum"],m:"shaker",v:"Rocks",cat:"long",t:"all",ing:["citronvert","triplesec"],gar:["menthe"],pilee:1,tav:30,yr:1953,
+  r:"25 ml jus de citron vert|15 ml sirop d'orgeat|15 ml curaçao orange|25 ml rhum vieux agricole|25 ml rhum vieux jamaïcain",gt:"Demi-tranche de citron vert et tête de menthe, glace pilée",h:"Créé par Victor Bergeron, dit Trader Vic. La recette devient la signature d'Hawaï en 1953."},
+ {n:"Mojito",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","sucre","menthe","gazeuse"],gar:["menthe"],pilon:1,tav:13,yr:1929,
+  r:"10 feuilles de menthe, pilées légèrement|1 bar spoon de sucre en poudre|20 ml jus de citron vert|50 ml ron cubain|50 ml eau gazeuse",gt:"Tranche de citron vert et tête de menthe",h:"Publié dans le « Libro de Cocktail » de Juan Lasa en 1929. Mojito signifie « petit jus »."},
+ {n:"Moscow Mule",alc:["vodka"],m:"direct",v:"Mule",cat:"long",t:"all",ing:["citronvert"],gar:[],tav:13,yr:1941,
+  r:"15 ml jus de citron vert|40 ml vodka|100 ml ginger beer",gt:"Tranche de citron vert",h:"Créé en 1941 par le propriétaire de Smirnoff pour promouvoir la vodka en cocktails."},
+ {n:"Paloma",alc:["tequila"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","gazeuse"],gar:[],tav:10,yr:1990,
+  r:"50 ml jus de pamplemousse|10 ml sirop d'agave|10 ml jus de citron vert|40 ml tequila blanco 100 % agave|50 ml eau gazeuse",gt:"Givrage au sel fin, demi-tranche de pamplemousse",h:"Apparu dans les années 1990 près de Guadalajara. Paloma signifie « colombe »."},
+ {n:"Piña Colada",alc:["rhum"],m:"shaker",v:"Highball",cat:"long",t:"all",ing:[],gar:["cerise"],tav:13,yr:1954,
+  r:"20 ml crème de noix de coco|60 ml jus d'ananas|40 ml rhum blanc",gt:"Quartier d'ananas et cerise à l'eau-de-vie",h:"Attribuée à Ramon « Monchito » Marrero Perez, au Hilton de San Juan, en 1954."},
+ {n:"Planter's Punch",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["bitters","orange"],gar:["cerise"],float:1,tav:16,yr:1638,
+  r:"2 traits aromatic bitters|40 ml jus d'orange|40 ml jus d'ananas|40 ml rhum agricole blanc|1 trait de rhum agricole ambré, sans mélanger",gt:"Quartier d'ananas et cerise à l'eau-de-vie, agitateur",h:"Le punch est la plus ancienne boisson du bar : première recette publiée en Inde en 1638."},
+ {n:"Rum Swizzle",alc:["rhum"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["citronvert","sucre","bitters"],gar:["zeste","menthe"],pilee:1,tav:20,yr:1788,
+  r:"20 ml sirop de sucre|30 ml jus de citron vert|20 ml velvet falernum|50 ml rum ambré|2 traits aromatic bitters",gt:"Zeste d'orange exprimé et tête de menthe, glace pilée",h:"Mélangé au bois lélé (swizzle stick). Une boisson au rum porte ce nom dès 1788."},
+ {n:"Sex on the Beach",alc:["vodka"],m:"shaker",v:"Highball",cat:"long",t:"all",ing:["orange"],gar:[],tav:15,yr:1980,
+  r:"40 ml jus d'orange|40 ml nectar de cranberry|10 ml liqueur de pêche|40 ml vodka",gt:"Demi-tranche d'orange",h:"Inventé aux États-Unis, popularisé à partir des années 1980."},
+ {n:"Spritz",alc:["bitter","bulles"],m:"direct",v:"Vin",cat:"long",t:"before",ing:["gazeuse"],gar:[],tav:16,yr:null,
+  r:"50 ml bitter ou autre spiritueux|60 ml vin blanc effervescent (prosecco)|20 ml eau gazeuse",gt:"Adaptée au spiritueux utilisé",h:"D'abord vin blanc et eau de Seltz ; l'amer arrive dans les années 1920 avant de devenir la signature de Venise."},
+ {n:"Tequila Sunrise",alc:["tequila"],m:"direct",v:"Highball",cat:"long",t:"all",ing:["orange"],gar:["cerise"],float:1,tav:13,yr:null,
+  r:"80 ml jus d'orange|40 ml tequila|1 trait de sirop de grenadine, sans mélanger",gt:"Demi-tranche d'orange et cerise, agitateur",h:"Première version au Mexique vers 1930 ; la version actuelle date de 1972."}
 ];
+
+/* ---------- Les 30 variantes du référentiel ---------- */
+const VAR=[
+ ["Caipirinha","Caipirovska","La vodka remplace la cachaça.",{alc:["vodka"]}],
+ ["Caipirinha","Caipirissima","Le ron cubain remplace la cachaça.",{alc:["rhum"]}],
+ ["Daiquiri","Hemingway Special","10 ml citron vert, 20 ml jus de pamplemousse, 5 ml maraschino, 40 ml ron cubain 3 años.",{ing:["citronvert"],gar:[]}],
+ ["Dry Martini","Vodkatini","La vodka remplace le gin.",{alc:["vodka","vermouth"]}],
+ ["Dry Martini","Tequini","La tequila remplace le gin.",{alc:["tequila","vermouth"]}],
+ ["Dry Martini","Gibson","Garni d'un oignon grelot.",{gar:[]}],
+ ["Dry Martini","Martinez","Vermouth rouge, liqueur maraschino, deux traits d'aromatic bitters et cerise à l'eau-de-vie.",{ing:["bitters"],gar:["cerise"],yr:1884}],
+ ["Dry Martini","Dirty Martini","15 ml de saumure d'olive remplacent le vermouth dry.",{alc:["gin"],gar:[]}],
+ ["Manhattan","Rob Roy","Aromatic bitters, 15 ml vermouth rouge, 55 ml scotch whisky, cerise à l'eau-de-vie.",{}],
+ ["Margarita","Tommy's Margarita","Le sirop d'agave remplace le triple sec.",{ing:["citronvert"]}],
+ ["Negroni","Negroni Sbagliato","Le prosecco remplace le gin.",{alc:["vermouth","bitter","bulles"]}],
+ ["Negroni","Boulevardier","Le bourbon remplace le gin.",{alc:["whisky","vermouth","bitter"]}],
+ ["Negroni","Cardinale","Le vermouth dry remplace le vermouth rouge.",{}],
+ ["Negroni","White Negroni","30 ml vermouth blanc, 30 ml gentiane, 30 ml gin.",{alc:["gin","vermouth"]}],
+ ["Sidecar","White Lady","10 ml jus de citron, 20 ml triple sec, 40 ml gin.",{alc:["gin"]}],
+ ["Bellini","Rossini","Nectar ou purée de fraise.",{}],
+ ["Bellini","Fellini","Nectar ou purée de framboise.",{}],
+ ["Bellini","Mimosa","Jus d'orange frais.",{ing:["orange"]}],
+ ["Bloody Mary","Bull Shot","Du consommé de bœuf remplace le jus de tomate.",{}],
+ ["Bloody Mary","Bloody Maria","La tequila remplace la vodka.",{alc:["tequila"]}],
+ ["Bloody Mary","Virgin Mary","Sans vodka.",{alc:[],tav:0}],
+ ["Bloody Mary","Red Snapper","Le gin remplace la vodka.",{alc:["gin"]}],
+ ["Fizz","Tom Collins","Même composition, préparé directement au verre, en Highball sur glace.",{m:"direct"}],
+ ["Moscow Mule","French Mule","Avec du cognac.",{alc:["cognac"]}],
+ ["Moscow Mule","Mexican Mule","Avec de la tequila.",{alc:["tequila"]}],
+ ["Moscow Mule","Chilcano de Pisco","Avec du pisco ; l'amargo chuncho remplace l'aromatic bitters.",{alc:["pisco"]}],
+ ["Moscow Mule","Gin-Gin Mule","Avec du gin et de la menthe fraîche.",{alc:["gin"],ing:["citronvert","menthe"]}],
+ ["Piña Colada","Chichi","La vodka remplace le rhum.",{alc:["vodka"]}],
+ ["Piña Colada","Blue Hawaiian","On ajoute 15 ml de curaçao bleu.",{ing:["triplesec"]}],
+ ["Piña Colada","Apple Colada","Le jus de pomme trouble remplace le jus d'ananas.",{}]
+];
+const baseByName=Object.fromEntries(BASE.map(c=>[c.n,c]));
+const C = BASE.concat(VAR.map(([of,n,d,o])=>{
+  const p=baseByName[of];
+  return Object.assign({},p,{n,of,d,tav:null,yr:null,r:null,h:null},o);
+}));
+const byName=Object.fromEntries(C.map(c=>[c.n,c]));
+const variantsOf=n=>VAR.filter(v=>v[0]===n);
 
 /* ---------- Critères ---------- */
 const has=(arr,x)=>arr.includes(x);
@@ -278,12 +431,11 @@ const CRIT = [
  {id:"pilee",g:"tech",grp:"Technique",label:"Glace pilée",f:c=>!!c.pilee},
  {id:"float",g:"tech",grp:"Technique",label:"Ingrédient versé sans mélanger",f:c=>!!c.float},
  {id:"pilon",g:"tech",grp:"Technique",label:"Se prépare au pilon",f:c=>!!c.pilon},
- {id:"fort",g:"tav",grp:"TAV",label:"TAV de 30 % ou plus",f:c=>c.tav>=30},
- {id:"leger",g:"tav",grp:"TAV",label:"TAV de 13 % ou moins",f:c=>c.tav<=13},
+ {id:"fort",g:"tav",grp:"TAV",label:"TAV de 30 % ou plus",f:c=>c.tav!==null&&c.tav>=30},
+ {id:"leger",g:"tav",grp:"TAV",label:"TAV de 13 % ou moins",f:c=>c.tav!==null&&c.tav<=13},
  {id:"ancien",g:"hist",grp:"Histoire",label:"Créé avant 1900",f:c=>c.yr!==null&&c.yr<1900},
  {id:"recent",g:"hist",grp:"Histoire",label:"Créé à partir des années 1980",f:c=>c.yr!==null&&c.yr>=1980}
 ];
-const byName = Object.fromEntries(C.map(c=>[c.n,c]));
 
 /* ---------- Aléatoire reproductible ---------- */
 function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return ()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return (h^=h>>>16)>>>0}}
@@ -320,13 +472,13 @@ function generate(rng){
     const res={rows:rows.map(r=>r.id),cols:cols.map(c=>c.id)};
     const tight=lists.filter(l=>l.length<=3).length;
     const max=Math.max(...lists.map(l=>l.length));
-    if(tight>=2&&max<=8)return res;
+    if(tight>=2&&max<=10)return res;
     if(!fallback)fallback=res;
   }
   return fallback;
 }
 
-/* ---------- Stockage (facultatif) ---------- */
+/* ---------- Stockage (facultatif, propre à chaque appareil) ---------- */
 const store={
   get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}},
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -335,16 +487,18 @@ const store={
 /* ---------- État ---------- */
 const critById=Object.fromEntries(CRIT.map(c=>[c.id,c]));
 const today=new Date();
-const dayKey=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
-const gridNumber=Math.floor((new Date(dayKey)-new Date("2026-01-01"))/86400000)+1;
+const fmt=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const dayKey=fmt(today);
+const dayNum=Math.round((new Date(dayKey+"T12:00:00")-new Date("2026-01-01T12:00:00"))/86400000);
+const gridNumber=dayNum+1;
 let S=null;
 
 function newGame(mode){
-  const seed = mode==="daily" ? hashStr("cocktaildoku-"+dayKey)() : Math.floor(Math.random()*4294967296);
+  const seed = mode==="daily" ? hashStr("cocktaildoku-v2-"+dayKey)() : Math.floor(Math.random()*4294967296);
   const g=generate(mulberry32(seed));
   S={mode,rows:g.rows,cols:g.cols,cells:Array(9).fill(null),errors:0,done:false,won:false};
   if(mode==="daily"){
-    const saved=store.get("cocktaildoku:daily:"+dayKey);
+    const saved=store.get("cocktaildoku2:daily:"+dayKey);
     if(saved&&saved.rows&&saved.rows.join()===g.rows.join()&&saved.cols.join()===g.cols.join())Object.assign(S,saved);
   }
   document.getElementById("btnDaily").setAttribute("aria-pressed",mode==="daily");
@@ -353,40 +507,38 @@ function newGame(mode){
   setToast("");
   render();
 }
-function save(){if(S.mode==="daily")store.set("cocktaildoku:daily:"+dayKey,S)}
+function save(){if(S.mode==="daily")store.set("cocktaildoku2:daily:"+dayKey,S)}
 const R=i=>critById[S.rows[Math.floor(i/3)]];
 const K=i=>critById[S.cols[i%3]];
 const matchesFor=i=>cellMatches(R(i),K(i));
 
-/* ---------- Rendu ---------- */
+/* ---------- Rendu de la grille ---------- */
 function render(){
   const lives=document.getElementById("lives");
   lives.innerHTML="";
-  for(let k=0;k<3;k++){const d=document.createElement("span");d.className="cherry"+(k<S.errors?" lost":"");lives.appendChild(d)}
+  for(let k=0;k<3;k++){lives.insertAdjacentHTML("beforeend",'<svg class="ico '+(k<3-S.errors?"full":"lost")+'" viewBox="0 0 40 46" aria-hidden="true">'+JIGGER+'</svg>')}
   lives.setAttribute("aria-label",(3-S.errors)+" erreur(s) restante(s)");
 
   const grid=document.getElementById("grid");
   grid.innerHTML="";
-  const corner=document.createElement("div");corner.className="corner";corner.textContent="×";corner.setAttribute("aria-hidden","true");grid.appendChild(corner);
-  S.cols.forEach(id=>{const c=critById[id];const h=document.createElement("div");h.className="head col";h.innerHTML="<small>"+c.grp+"</small>"+c.label;grid.appendChild(h)});
+  grid.insertAdjacentHTML("beforeend",'<div class="corner" aria-hidden="true"><svg class="ico" viewBox="0 0 40 46">'+TOOLS.shaker+'</svg></div>');
+  S.cols.forEach(id=>{const c=critById[id];grid.insertAdjacentHTML("beforeend",'<div class="head col"><small>'+c.grp+'</small>'+c.label+'</div>')});
 
   const reveal = S.done && !S.won ? solveRemaining() : {};
   for(let r=0;r<3;r++){
     const rc=critById[S.rows[r]];
-    const h=document.createElement("div");h.className="head row";h.innerHTML="<small>"+rc.grp+"</small>"+rc.label;grid.appendChild(h);
+    grid.insertAdjacentHTML("beforeend",'<div class="head row"><small>'+rc.grp+'</small>'+rc.label+'</div>');
     for(let c=0;c<3;c++){
       const i=r*3+c;
       const b=document.createElement("button");
       b.className="coaster";b.dataset.i=i;
       const n=matchesFor(i).length;
-      if(S.cells[i]){
-        b.classList.add("ok");b.disabled=true;
-        b.innerHTML='<span class="name">'+S.cells[i]+'</span>';
-        b.setAttribute("aria-label",R(i).label+" et "+K(i).label+" : "+S.cells[i]);
-      }else if(S.done){
-        b.classList.add("reveal");b.disabled=true;
-        b.innerHTML='<span class="name">'+(reveal[i]||"")+'</span>';
-        b.setAttribute("aria-label",R(i).label+" et "+K(i).label+" : réponse possible "+(reveal[i]||""));
+      const name=S.cells[i]||(S.done?reveal[i]:null);
+      if(name){
+        const ck=byName[name];
+        b.classList.add(S.cells[i]?"ok":"reveal");b.disabled=true;
+        b.innerHTML=glass(ck.v)+'<span class="name">'+name+'</span>'+(ck.of?'<span class="of">variante du '+ck.of+'</span>':'');
+        b.setAttribute("aria-label",R(i).label+" et "+K(i).label+" : "+(S.cells[i]?"":"réponse possible ")+name);
       }else{
         b.innerHTML='<span class="q">?</span><span class="n">'+n+(n>1?" possibilités":" possibilité")+'</span>';
         b.setAttribute("aria-label",R(i).label+" et "+K(i).label+", "+n+" possibilités");
@@ -411,32 +563,66 @@ function renderEnd(){
   end.hidden=false;
   const found=S.cells.filter(Boolean).length;
   let html = S.won
-    ? "<h2>Grille complète !</h2><p>Les 9 sous-verres sont remplis"+(S.errors?" avec "+S.errors+" erreur"+(S.errors>1?"s":""):" sans aucune erreur")+".</p>"
-    : "<h2>Trois erreurs</h2><p>Vous avez trouvé "+found+" cocktail"+(found>1?"s":"")+" sur 9. Les sous-verres rouges montrent une réponse possible.</p>";
+    ? "<h2>Service impeccable !</h2><p>Les 9 sous-verres sont servis"+(S.errors?", avec "+S.errors+" doseur"+(S.errors>1?"s":"")+" renversé"+(S.errors>1?"s":""):", sans une goutte renversée")+".</p>"
+    : "<h2>Fin du service</h2><p>Trois doseurs renversés. Vous avez servi "+found+" cocktail"+(found>1?"s":"")+" sur 9 ; les sous-verres rouges montrent une réponse possible.</p>";
   if(S.mode==="daily"){
-    const st=store.get("cocktaildoku:stats")||{played:0,won:0,streak:0,best:0};
+    const st=store.get("cocktaildoku2:stats")||{played:0,won:0,streak:0,best:0};
     html+='<div class="stats"><div class="stat"><b>'+st.played+'</b><span>Parties</span></div><div class="stat"><b>'+(st.played?Math.round(st.won/st.played*100):0)+'%</b><span>Réussite</span></div><div class="stat"><b>'+st.streak+'</b><span>Série</span></div><div class="stat"><b>'+st.best+'</b><span>Record</span></div></div>';
     html+='<button class="btn" id="again">Jouer une grille d\'entraînement</button>';
   }else{
     html+='<p><button class="btn" id="again">Nouvelle grille</button></p>';
   }
   html+='<div class="answers"><h3>Toutes les réponses possibles</h3><ul>';
-  for(let i=0;i<9;i++){html+="<li><b>"+R(i).label+" × "+K(i).label+"</b>"+matchesFor(i).join(", ")+"</li>"}
+  for(let i=0;i<9;i++){html+="<li><b>"+R(i).label+" et "+K(i).label+"</b>"+matchesFor(i).join(", ")+"</li>"}
   html+="</ul></div>";
   end.innerHTML=html;
-  document.getElementById("again").addEventListener("click",()=>newGame("random"));
+  document.getElementById("again").addEventListener("click",()=>{newGame("random");window.scrollTo({top:0,behavior:"smooth"})});
 }
 function recordStats(){
   if(S.mode!=="daily")return;
-  const st=store.get("cocktaildoku:stats")||{played:0,won:0,streak:0,best:0,last:null};
+  const st=store.get("cocktaildoku2:stats")||{played:0,won:0,streak:0,best:0,last:null};
   if(st.last===dayKey)return;
   const y=new Date(today);y.setDate(y.getDate()-1);
-  const yKey=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
   st.played++;
-  if(S.won){st.won++;st.streak=(st.lastWin===yKey?st.streak:0)+1;st.lastWin=dayKey;st.best=Math.max(st.best,st.streak)}
+  if(S.won){st.won++;st.streak=(st.lastWin===fmt(y)?st.streak:0)+1;st.lastWin=dayKey;st.best=Math.max(st.best,st.streak)}
   else st.streak=0;
   st.last=dayKey;
-  store.set("cocktaildoku:stats",st);
+  store.set("cocktaildoku2:stats",st);
+}
+
+/* ---------- L'ardoise du jour (programme sur 12 jours) ---------- */
+const PROG=[
+ ["Vodka (1)",["Cosmopolitan","Espresso Martini","Moscow Mule"]],
+ ["Vodka (2)",["Bloody Mary","Sex on the Beach","Pornstar Martini"]],
+ ["Rhum et cachaça",["Daiquiri","Mojito","Caipirinha"]],
+ ["Rhum tiki",["Mai Tai","Piña Colada","Planter's Punch"]],
+ ["Rhum ambré et brun",["Dark and Stormy","Rum Swizzle","Sour"]],
+ ["Gin (1)",["Dry Martini","Negroni","Gin Basil Smash"]],
+ ["Gin (2)",["Aviation","Bramble","Fizz"]],
+ ["Tequila",["Margarita","Paloma","Tequila Sunrise"]],
+ ["Whisky",["Old-Fashioned","Manhattan","Penicillin"]],
+ ["Cognac",["Sidecar","Horse's Neck","Mint Julep"]],
+ ["Bulles",["French 75","Champagne Cocktail","Bellini"]],
+ ["Vins et amers",["Bamboo","Americano","Spritz"]]
+];
+const METH={shaker:"Shaker",melange:"Verre à mélange",direct:"Direct au verre"};
+const TYPE={before:"Before dinner",after:"After dinner",all:"All day cocktail"};
+function renderBoard(){
+  const k=((dayNum%12)+12)%12;
+  const [theme,list]=PROG[k];
+  const next=PROG[(k+1)%12][0];
+  document.getElementById("boardSub").textContent="Jour "+(k+1)+" sur 12 du programme : "+theme+". Demain : "+next+".";
+  document.getElementById("boardList").innerHTML=list.map((n,j)=>{
+    const c=baseByName[n];
+    const vars=variantsOf(n);
+    return '<details'+(j===0?' open':'')+'><summary>'+glass(c.v)+'<span><span class="t">'+c.n+'</span><span class="m">'+METH[c.m]+", verre "+c.v+'</span></span></summary>'+
+      '<div class="fiche"><ul class="rec">'+c.r.split("|").map(x=>"<li>"+x+"</li>").join("")+'</ul>'+
+      '<dl><dt>Garniture</dt><dd>'+c.gt+'</dd><dt>Catégorie</dt><dd>'+(c.cat==="short"?"Short drink":"Long drink")+'</dd><dt>Type</dt><dd>'+TYPE[c.t]+'</dd><dt>TAV</dt><dd>'+c.tav+' %</dd></dl>'+
+      '<p>'+c.h+'</p>'+
+      (vars.length?'<p class="var">Variantes : '+vars.map(v=>"<b>"+v[1]+"</b> ("+v[2].replace(/\.$/,"")+")").join(" ; ")+'.</p>':'')+
+      (c.vt?'<p class="var">'+c.vt+'</p>':'')+
+      '</div></details>';
+  }).join("");
 }
 
 /* ---------- Sélecteur ---------- */
@@ -444,7 +630,7 @@ let current=null;
 const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 function openSheet(i){
   current=i;
-  document.getElementById("sheetCrit").textContent=R(i).label+" + "+K(i).label;
+  document.getElementById("sheetCrit").textContent=R(i).label+" et "+K(i).label;
   const s=document.getElementById("search");s.value="";
   fillList("");
   document.getElementById("sheetBack").classList.add("open");
@@ -454,9 +640,15 @@ function closeSheet(){document.getElementById("sheetBack").classList.remove("ope
 function fillList(q){
   const used=new Set(S.cells.filter(Boolean));
   const list=document.getElementById("list");list.innerHTML="";
-  const items=C.map(c=>c.n).sort((a,b)=>a.localeCompare(b,"fr")).filter(n=>norm(n).includes(norm(q)));
-  if(!items.length){list.innerHTML='<p class="empty">Aucun cocktail du socle ne porte ce nom. Vérifiez l\'orthographe.</p>';return}
-  items.forEach(n=>{const b=document.createElement("button");b.textContent=n;if(used.has(n)){b.disabled=true;b.title="Déjà utilisé dans la grille"}b.addEventListener("click",()=>choose(n));list.appendChild(b)});
+  const items=C.slice().sort((a,b)=>a.n.localeCompare(b.n,"fr")).filter(c=>norm(c.n).includes(norm(q))||(c.of&&norm(c.of).includes(norm(q))));
+  if(!items.length){list.innerHTML='<p class="empty">Aucun cocktail ni variante du socle ne porte ce nom.</p>';return}
+  items.forEach(c=>{
+    const b=document.createElement("button");
+    b.innerHTML='<span>'+c.n+'</span>'+(c.of?'<span class="of">variante du '+c.of+'</span>':'');
+    if(used.has(c.n)){b.disabled=true;b.title="Déjà servi dans la grille"}
+    b.addEventListener("click",()=>choose(c.n));
+    list.appendChild(b);
+  });
 }
 function why(n,i){
   const c=byName[n];const fails=[];
@@ -469,7 +661,7 @@ function choose(n){
   if(S.done||S.cells[i])return;
   if(matchesFor(i).includes(n)){
     S.cells[i]=n;
-    setToast("Bien vu : "+n+".", "good");
+    setToast("Bien servi : "+n+".","good");
     if(S.cells.every(Boolean)){S.done=true;S.won=true;recordStats()}
   }else{
     S.errors++;
@@ -477,7 +669,8 @@ function choose(n){
     if(S.errors>=3){S.done=true;S.won=false;recordStats()}
   }
   save();render();
-  if(!S.cells[i]&&!S.done){const b=document.querySelector('.coaster[data-i="'+i+'"]');if(b){b.classList.add("miss");b.focus()}}
+  const b=document.querySelector('.coaster[data-i="'+i+'"]');
+  if(b){if(S.cells[i])b.classList.add("pop");else if(!S.done){b.classList.add("miss");b.focus()}}
   if(S.done)document.getElementById("end").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function setToast(msg,kind){const t=document.getElementById("toast");t.textContent=msg;t.className="toast"+(kind?" "+kind:"")}
@@ -490,6 +683,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.getElement
 document.getElementById("btnDaily").addEventListener("click",()=>newGame("daily"));
 document.getElementById("btnRandom").addEventListener("click",()=>newGame("random"));
 
+renderBoard();
 newGame("daily");
 </script>
 </body>
