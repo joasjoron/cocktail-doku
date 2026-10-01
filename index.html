@@ -161,6 +161,9 @@ h1{font-family:var(--display);font-weight:400;font-size:clamp(42px,11vw,66px);li
 .fiche p{margin:0 0 8px;font-size:14.5px;max-width:62ch}
 .fiche .var{color:var(--chalk-dim)}
 .fiche .var b{color:var(--chalk);font-weight:600}
+.board-more{margin:6px 0 8px}
+.chalk-btn{background:transparent;color:var(--chalk);border:1.5px solid rgba(236,234,226,.5);border-radius:999px;padding:6px 14px;font-family:var(--cond);font-size:16px;font-weight:600;cursor:pointer}
+.chalk-btn:hover{border-color:var(--brass-bright);color:var(--brass-bright)}
 
 details.rules{margin:26px 0 40px;border-top:1px solid color-mix(in srgb,var(--muted) 35%,transparent);padding-top:12px}
 details.rules summary{cursor:pointer;font-family:var(--cond);font-weight:600;font-size:19px}
@@ -212,8 +215,9 @@ details.rules li{margin-bottom:6px;font-size:15px;max-width:66ch}
 
     <section class="board" aria-labelledby="boardTitle">
       <h2 id="boardTitle">À l'ardoise aujourd'hui</h2>
-      <p class="sub" id="boardSub"></p>
+      <p class="sub">Trois fiches techniques du socle, tirées au sort pour la journée.</p>
       <div id="boardList"></div>
+      <p class="board-more"><button class="chalk-btn" id="boardMore">Autres fiches</button></p>
     </section>
 
     <details class="rules">
@@ -229,7 +233,7 @@ details.rules li{margin-bottom:6px;font-size:15px;max-width:66ch}
         <li>« Menthe » compte la menthe dans la recette ou en garniture. « Zeste » inclut le Dry Martini (olive ou zeste).</li>
         <li>« Bitter » désigne l'amer type Campari, à ne pas confondre avec l'aromatic bitters. La gentiane du White Negroni ne compte pas.</li>
         <li>« Versé sans mélanger » : un ingrédient ajouté en dernier par-dessus (float).</li>
-        <li>L'ardoise du jour suit le programme de révision sur 12 jours : vodka, rhum, gin, tequila, whisky, cognac, bulles, puis vins et amers.</li>
+        <li>L'ardoise présente chaque jour trois fiches techniques du socle, tirées au sort. Le bouton « Autres fiches » en propose d'autres.</li>
       </ul>
     </details>
   </main>
@@ -590,28 +594,11 @@ function recordStats(){
   store.set("cocktaildoku2:stats",st);
 }
 
-/* ---------- L'ardoise du jour (programme sur 12 jours) ---------- */
-const PROG=[
- ["Vodka (1)",["Cosmopolitan","Espresso Martini","Moscow Mule"]],
- ["Vodka (2)",["Bloody Mary","Sex on the Beach","Pornstar Martini"]],
- ["Rhum et cachaça",["Daiquiri","Mojito","Caipirinha"]],
- ["Rhum tiki",["Mai Tai","Piña Colada","Planter's Punch"]],
- ["Rhum ambré et brun",["Dark and Stormy","Rum Swizzle","Sour"]],
- ["Gin (1)",["Dry Martini","Negroni","Gin Basil Smash"]],
- ["Gin (2)",["Aviation","Bramble","Fizz"]],
- ["Tequila",["Margarita","Paloma","Tequila Sunrise"]],
- ["Whisky",["Old-Fashioned","Manhattan","Penicillin"]],
- ["Cognac",["Sidecar","Horse's Neck","Mint Julep"]],
- ["Bulles",["French 75","Champagne Cocktail","Bellini"]],
- ["Vins et amers",["Bamboo","Americano","Spritz"]]
-];
+/* ---------- L'ardoise du jour ---------- */
 const METH={shaker:"Shaker",melange:"Verre à mélange",direct:"Direct au verre"};
 const TYPE={before:"Before dinner",after:"After dinner",all:"All day cocktail"};
-function renderBoard(){
-  const k=((dayNum%12)+12)%12;
-  const [theme,list]=PROG[k];
-  const next=PROG[(k+1)%12][0];
-  document.getElementById("boardSub").textContent="Jour "+(k+1)+" sur 12 du programme : "+theme+". Demain : "+next+".";
+function pickThree(rng){return shuffle(BASE.map(c=>c.n),rng).slice(0,3)}
+function renderBoard(list){
   document.getElementById("boardList").innerHTML=list.map((n,j)=>{
     const c=baseByName[n];
     const vars=variantsOf(n);
@@ -624,6 +611,7 @@ function renderBoard(){
       '</div></details>';
   }).join("");
 }
+document.getElementById("boardMore").addEventListener("click",()=>renderBoard(pickThree(Math.random)));
 
 /* ---------- Sélecteur ---------- */
 let current=null;
@@ -683,7 +671,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.getElement
 document.getElementById("btnDaily").addEventListener("click",()=>newGame("daily"));
 document.getElementById("btnRandom").addEventListener("click",()=>newGame("random"));
 
-renderBoard();
+renderBoard(pickThree(mulberry32(hashStr("ardoise-"+dayKey)())));
 newGame("daily");
 </script>
 </body>
